@@ -112,7 +112,13 @@ if (equipo === "MC") {
     pintar("mc_wc", +f[i.wc], {verde:96});
     pintar("mc_encuesta", +f[i.encuesta], {verde:73, azul:80});
     pintar("mc_qa", +f[i.qa], {verde:91, azul:96});
-    pintar("mc_score", +f[i.score], {verde:4.5, azul:4.8});
+    
+pintar(
+  "mc_score",
+  parseFloat(f[i.score].trim()),
+  { verde: 4.5, azul: 4.8 }
+);
+
   });
 }
 
