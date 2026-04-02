@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Resultados | Ultimate Leisure Club</title>
+
+  <!-- CSS base -->
+  <link rel="stylesheet" href="estilos.css">
+
+  <style>
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 6px;
+      text-align: left;
+    }
+    th {
+      border-bottom: 1px solid #ccc;
+    }
+
+    .valor {
+      display: inline-block;
+      min-width: 80px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: bold;
+      background: #f4f6f8;
+    }
+
+    .rojo  { background:#f8d7da; color:#721c24; }
+    .verde { background:#d4edda; color:#155724; }
+    .azul  { background:#d1ecf1; color:#0c5460; }
+  </style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+  <h1>Resultados Service Center</h1>
+  <p id="info-usuario"></p>
+  <hr>
+
+  <!-- ================= MEMBER CARE ================= -->
+  <div id="mc" style="display:none;">
+    <h2>Member Care – Métricas MTD</h2>
+    <table>
+      <tr><th>Métrica</th><th>Resultado</th></tr>
+      <tr><td>SAME</td><td><span id="mc_same" class="valor"></span></td></tr>
+      <tr><td>DNG</td><td><span id="mc_dng" class="valor"></span></td></tr>
+      <tr><td>% SAME</td><td><span id="mc_psame" class="valor"></span></td></tr>
+      <tr><td>Montos Recuperados</td><td><span id="mc_monto" class="valor"></span></td></tr>
+      <tr><td>% WC</td><td><span id="mc_wc" class="valor"></span></td></tr>
+      <tr><td>% Encuesta</td><td><span id="mc_encuesta" class="valor"></span></td></tr>
+      <tr><td>QA</td><td><span id="mc_qa" class="valor"></span></td></tr>
+      <tr><td>Score</td><td><span id="mc_score" class="valor"></span></td></tr>
+    </table>
+  </div>
+
+  <!-- ================= TRAVEL SPECIALIST ================= -->
+  <div id="ts" style="display:none;">
+    <h2>Travel Specialist – Métricas MTD</h2>
+    <table>
+      <tr><th>Métrica</th><th>Resultado</th></tr>
+      <tr><td>Noches Vendidas</td><td><span id="ts_noches" class="valor"></span></td></tr>
+      <tr><td>QA</td><td><span id="ts_qa" class="valor"></span></td></tr>
+      <tr><td>% Encuesta</td><td><span id="ts_encuesta" class="valor"></span></td></tr>
+      <tr><td>Score</td><td><span id="ts_score" class="valor"></span></td></tr>
+      <tr><td>Ocupación RM</td><td><span id="ts_rm" class="valor"></span></td></tr>
+      <tr><td>Ocupación PC</td><td><span id="ts_pc" class="valor"></span></td></tr>
+      <tr><td>Ocupación PP</td><td><span id="ts_pp" class="valor"></span></td></tr>
+      <tr><td>Ocupación SA</td><td><span id="ts_sa" class="valor"></span></td></tr>
+      <tr><td>Ocupación CG</td><td><span id="ts_cg" class="valor"></span></td></tr>
+    </table>
+  </div>
+
+</div>
+
+<script>
+  // =====================
+  // Sesión y datos
+  // =====================
+  const usuario = localStorage.getItem("usuario");
+  const equipo  = localStorage.getItem("equipo");
+  const datos   = JSON.parse(localStorage.getItem("resultados_mtd")) || {};
+
+  if (!usuario || !equipo) {
+    window.location.href = "index.html";
+  }
+
+  document.getElementById("info-usuario").innerText =
+    "Usuario: " + usuario + " | Equipo: " +
+    (equipo === "MC" ? "Member Care" : "Travel Specialist");
+
+  const d = datos[usuario];
+
+  if (!d) {
+    document.getElementById("info-usuario").innerText += " (sin datos cargados)";
+  }
+
+  // =====================
+  // Función semáforo
+  // =====================
+  function pintar(id, valor, reglas) {
+    const el = document.getElementById(id);
+    el.innerText = valor;
+    el.classList.remove("rojo", "verde", "azul");
+
+    if (reglas.azul !== undefined && valor >= reglas.azul) {
+      el.classList.add("azul");
+    } else if (valor >= reglas.verde) {
+      el.classList.add("verde");
+    } else {
+      el.classList.add("rojo");
+    }
+  }
+
+  // =====================
+  // MEMBER CARE
+  // =====================
+  if (equipo === "MC" && d) {
+    document.getElementById("mc").style.display = "block";
+    pintar("mc_same", d.same, { verde:12, azul:15 });
+    document.getElementById("mc_dng").innerText = d.dng;
+    pintar("mc_psame", d.psame, { verde:70 });
+    pintar("mc_monto", d.monto, { verde:8000, azul:15000 });
+    pintar("mc_wc", d.wc, { verde:96 });
+    pintar("mc_encuesta", d.encuesta, { verde:73, azul:80 });
+    pintar("mc_qa", d.qa, { verde:91, azul:96 });
+    pintar("mc_score", d.score, { verde:4.5, azul:4.8 });
+  }
+
+  // =====================
+  // TRAVEL SPECIALIST
+  // =====================
+  if (equipo === "TS" && d) {
+    document.getElementById("ts").style.display = "block";
+    pintar("ts_noches", d.noches, { verde:500, azul:600 });
+    pintar("ts_qa", d.qa, { verde:91, azul:96 });
+    pintar("ts_encuesta", d.encuesta, { verde:80, azul:86 });
+    pintar("ts_score", d.score, { verde:4.5, azul:4.8 });
+
+    document.getElementById("ts_rm").innerText = d.rm;
+    document.getElementById("ts_pc").innerText = d.pc;
+    document.getElementById("ts_pp").innerText = d.pp;
+    document.getElementById("ts_sa").innerText = d.sa;
+    document.getElementById("ts_cg").innerText = d.cg;
+  }
+</script>
+
+</body>
+</html>
+``
