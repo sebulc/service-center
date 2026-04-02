@@ -15,11 +15,13 @@ body {
 .login-container {
   background-color: #ffffff;
   width: 360px;
-  padding: 40px;
+  padding: 40px 24px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
+
+/* ===== GENERAL ===== */
 
 .logo {
   max-width: 160px;
@@ -72,4 +74,75 @@ button {
 
 button:hover {
   background-color: #16304d;
+}
+
+/* =============================== */
+/* ===== DASHBOARD / TABLAS ====== */
+/* =============================== */
+
+table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  table-layout: fixed; /* CLAVE */
+}
+
+th {
+  font-size: 13px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #ccc;
+}
+
+td {
+  padding: 6px 4px;
+  font-size: 13px;
+}
+
+/* Ancho controlado por columna */
+th:nth-child(1),
+td:nth-child(1) {
+  width: 40%;
+  text-align: left;
+}
+
+th:nth-child(2),
+td:nth-child(2),
+th:nth-child(3),
+td:nth-child(3) {
+  width: 30%;
+  text-align: center;
+}
+
+/* Mantener columnas visibles siempre */
+th:nth-child(3),
+td:nth-child(3) {
+  display: table-cell !important;
+}
+
+/* Recuadro de valores */
+.valor {
+  display: inline-block;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+  background: #f4f6f8;
+  white-space: nowrap;
+}
+
+/* Estados */
+.rojo {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.verde {
+  background: #d4edda;
+  color: #155724;
+}
+
+.azul {
+  background: #d1ecf1;
+  color: #0c5460;
 }
