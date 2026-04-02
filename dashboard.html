@@ -69,16 +69,23 @@
 </div>
 
 <script>
+/* ================= CONFIG ================= */
 const URL_MC = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=0&single=true&output=csv";
 const URL_TS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv";
 
+/* ================= SESIÓN ================= */
 const usuario = localStorage.getItem("usuario");
 const equipo  = localStorage.getItem("equipo");
-
 if (!usuario || !equipo) window.location.href = "index.html";
 
 document.getElementById("info-usuario").innerText =
-  "Usuario: " + usuario + " | Equipo: " + (equipo === "MC" ? "Member Care" : "Travel Specialist");
+  "Usuario: " + usuario + " | Equipo: " +
+  (equipo === "MC" ? "Member Care" : "Travel Specialist");
+
+/* ================= HELPERS ================= */
+function limpiarNumero(valor) {
+  return valor ? parseFloat(valor.replace(/[^0-9.]/g, "")) : 0;
+}
 
 function pintar(id, valor, reglas) {
   const el = document.getElementById(id);
@@ -94,7 +101,7 @@ function cargarDatos(url, callback) {
     .then(r => r.text())
     .then(csv => {
       const filas = csv.trim().split("\n").map(f => f.split(","));
-      const headers = filas.shift();
+      const headers = filas.shift().map(h => h.trim().toLowerCase());
       const idx = {};
       headers.forEach((h,i)=>idx[h]=i);
       const fila = filas.find(f => f[idx.email] === usuario);
@@ -102,41 +109,38 @@ function cargarDatos(url, callback) {
     });
 }
 
+/* ================= MEMBER CARE ================= */
 if (equipo === "MC") {
   document.getElementById("mc").style.display = "block";
   cargarDatos(URL_MC, (f,i)=>{
-    pintar("mc_same", +f[i.same], {verde:12, azul:15});
-    document.getElementById("mc_dng").innerText = f[i.dng];
-    pintar("mc_psame", +f[i.psame], {verde:70});
-    pintar("mc_monto", +f[i.monto], {verde:8000, azul:15000});
-    pintar("mc_wc", +f[i.wc], {verde:96});
-    pintar("mc_encuesta", +f[i.encuesta], {verde:73, azul:80});
-    pintar("mc_qa", +f[i.qa], {verde:91, azul:96});
-    
-pintar(
-  "mc_score",
-  parseFloat(f[i.score].trim()),
-  { verde: 4.5, azul: 4.8 }
-);
-
+    pintar("mc_same", limpiarNumero(f[i.same]), {verde:12, azul:15});
+    document.getElementById("mc_dng").innerText = limpiarNumero(f[i.dng]);
+    pintar("mc_psame", limpiarNumero(f[i.psame]), {verde:70});
+    pintar("mc_monto", limpiarNumero(f[i.monto]), {verde:8000, azul:15000});
+    pintar("mc_wc", limpiarNumero(f[i.wc]), {verde:96});
+    pintar("mc_encuesta", limpiarNumero(f[i.encuesta]), {verde:73, azul:80});
+    pintar("mc_qa", limpiarNumero(f[i.qa]), {verde:91, azul:96});
+    pintar("mc_score", limpiarNumero(f[i.score]), {verde:4.5, azul:4.8});
   });
 }
 
+/* ================= TRAVEL SPECIALIST ================= */
 if (equipo === "TS") {
   document.getElementById("ts").style.display = "block";
   cargarDatos(URL_TS, (f,i)=>{
-    pintar("ts_noches", +f[i.noches], {verde:500, azul:600});
-    pintar("ts_qa", +f[i.qa], {verde:91, azul:96});
-    pintar("ts_encuesta", +f[i.encuesta], {verde:80, azul:86});
-    pintar("ts_score", +f[i.score], {verde:4.5, azul:4.8});
-    document.getElementById("ts_rm").innerText = f[i.rm];
-    document.getElementById("ts_pc").innerText = f[i.pc];
-    document.getElementById("ts_pp").innerText = f[i.pp];
-    document.getElementById("ts_sa").innerText = f[i.sa];
-    document.getElementById("ts_cg").innerText = f[i.cg];
+    pintar("ts_noches", limpiarNumero(f[i.noches]), {verde:500, azul:600});
+    pintar("ts_qa", limpiarNumero(f[i.qa]), {verde:91, azul:96});
+    pintar("ts_encuesta", limpiarNumero(f[i.encuesta]), {verde:80, azul:86});
+    pintar("ts_score", limpiarNumero(f[i.score]), {verde:4.5, azul:4.8});
+    document.getElementById("ts_rm").innerText = limpiarNumero(f[i.rm]);
+    document.getElementById("ts_pc").innerText = limpiarNumero(f[i.pc]);
+    document.getElementById("ts_pp").innerText = limpiarNumero(f[i.pp]);
+    document.getElementById("ts_sa").innerText = limpiarNumero(f[i.sa]);
+    document.getElementById("ts_cg").innerText = limpiarNumero(f[i.cg]);
   });
 }
 </script>
 
 </body>
 </html>
+``
