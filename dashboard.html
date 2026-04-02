@@ -20,7 +20,6 @@
       font-weight:bold;
       background:#f4f6f8;
     }
-
     .rojo  { background:#f8d7da; color:#721c24; }
     .verde { background:#d4edda; color:#155724; }
     .azul  { background:#d1ecf1; color:#0c5460; }
@@ -30,7 +29,6 @@
 <body>
 
 <div class="login-container">
-
   <h1>Resultados Service Center</h1>
   <p id="info-usuario"></p>
   <hr>
@@ -67,28 +65,28 @@
       <tr><td>Ocupación CG</td><td><span id="ts_cg" class="valor"></span></td></tr>
     </table>
   </div>
-
 </div>
 
 <script>
-/* ================= CONFIG ================= */
+/* ===== CONFIG ===== */
 const URL_MC = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=0&single=true&output=csv";
 const URL_TS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv";
 
-/* ================= SESIÓN ================= */
+/* ===== SESIÓN ===== */
 const usuario = localStorage.getItem("usuario");
 const equipo  = localStorage.getItem("equipo");
+
 if (!usuario || !equipo) window.location.href = "index.html";
 
 document.getElementById("info-usuario").innerText =
   "Usuario: " + usuario + " | Equipo: " +
   (equipo === "MC" ? "Member Care" : "Travel Specialist");
 
-/* ================= HELPERS ================= */
-function limpiarNumero(valor) {
+/* ===== HELPERS ===== */
+function num(valor) {
   if (!valor) return null;
-  const limpio = valor.replace(/[^0-9.]/g, "");
-  return limpio === "" ? null : parseFloat(limpio);
+  const limpio = valor.replace(/[^0-9.]/g,"");
+  return limpio === "" ? null : Number(limpio);
 }
 
 function pintar(id, valor, reglas) {
@@ -107,47 +105,51 @@ function pintar(id, valor, reglas) {
   else el.classList.add("rojo");
 }
 
-function cargarDatos(url, callback) {
+function cargarCSV(url, callback) {
   fetch(url)
     .then(r => r.text())
     .then(csv => {
-      const filas = csv.trim().split("\n").map(f => f.split(","));
-      const headers = filas.shift().map(h => h.trim().toLowerCase());
-      const idx = {};
-      headers.forEach((h,i)=>idx[h]=i);
-      const fila = filas.find(f => f[idx.email] === usuario);
-      if (fila) callback(fila, idx);
+      const filas = csv.trim().split("\n");
+      const headers = filas.shift().split(",").map(h => h.trim().toLowerCase());
+
+      filas.forEach(filaCSV => {
+        const valores = filaCSV.split(",");
+        const fila = {};
+        headers.forEach((h,i)=> fila[h] = valores[i]);
+
+        if (fila.email === usuario) callback(fila);
+      });
     });
 }
 
-/* ================= MEMBER CARE ================= */
+/* ===== MEMBER CARE ===== */
 if (equipo === "MC") {
   document.getElementById("mc").style.display = "block";
-  cargarDatos(URL_MC, (f,i)=>{
-    pintar("mc_same", limpiarNumero(f[i.same]), {verde:12, azul:15});
-    document.getElementById("mc_dng").innerText = limpiarNumero(f[i.dng]) ?? "—";
-    pintar("mc_psame", limpiarNumero(f[i.psame]), {verde:70});
-    pintar("mc_monto", limpiarNumero(f[i.monto]), {verde:8000, azul:15000});
-    pintar("mc_wc", limpiarNumero(f[i.wc]), {verde:96});
-    pintar("mc_encuesta", limpiarNumero(f[i.encuesta]), {verde:73, azul:80});
-    pintar("mc_qa", limpiarNumero(f[i.qa]), {verde:91, azul:96});
-    pintar("mc_score", limpiarNumero(f[i.score]), {verde:4.5, azul:4.8});
+  cargarCSV(URL_MC, f => {
+    pintar("mc_same",     num(f.same),     {verde:12, azul:15});
+    document.getElementById("mc_dng").innerText = num(f.dng) ?? "—";
+    pintar("mc_psame",    num(f.psame),    {verde:70});
+    pintar("mc_monto",    num(f.monto),    {verde:8000, azul:15000});
+    pintar("mc_wc",       num(f.wc),       {verde:96});
+    pintar("mc_encuesta", num(f.encuesta), {verde:73, azul:80});
+    pintar("mc_qa",       num(f.qa),       {verde:91, azul:96});
+    pintar("mc_score",    num(f.score),    {verde:4.5, azul:4.8});
   });
 }
 
-/* ================= TRAVEL SPECIALIST ================= */
+/* ===== TRAVEL SPECIALIST ===== */
 if (equipo === "TS") {
   document.getElementById("ts").style.display = "block";
-  cargarDatos(URL_TS, (f,i)=>{
-    pintar("ts_noches", limpiarNumero(f[i.noches]), {verde:500, azul:600});
-    pintar("ts_qa", limpiarNumero(f[i.qa]), {verde:91, azul:96});
-    pintar("ts_encuesta", limpiarNumero(f[i.encuesta]), {verde:80, azul:86});
-    pintar("ts_score", limpiarNumero(f[i.score]), {verde:4.5, azul:4.8});
-    document.getElementById("ts_rm").innerText = limpiarNumero(f[i.rm]) ?? "—";
-    document.getElementById("ts_pc").innerText = limpiarNumero(f[i.pc]) ?? "—";
-    document.getElementById("ts_pp").innerText = limpiarNumero(f[i.pp]) ?? "—";
-    document.getElementById("ts_sa").innerText = limpiarNumero(f[i.sa]) ?? "—";
-    document.getElementById("ts_cg").innerText = limpiarNumero(f[i.cg]) ?? "—";
+  cargarCSV(URL_TS, f => {
+    pintar("ts_noches",   num(f.noches),   {verde:500, azul:600});
+    pintar("ts_qa",       num(f.qa),        {verde:91, azul:96});
+    pintar("ts_encuesta", num(f.encuesta),  {verde:80, azul:86});
+    pintar("ts_score",    num(f.score),     {verde:4.5, azul:4.8});
+    document.getElementById("ts_rm").innerText = num(f.rm) ?? "—";
+    document.getElementById("ts_pc").innerText = num(f.pc) ?? "—";
+    document.getElementById("ts_pp").innerText = num(f.pp) ?? "—";
+    document.getElementById("ts_sa").innerText = num(f.sa) ?? "—";
+    document.getElementById("ts_cg").innerText = num(f.cg) ?? "—";
   });
 }
 </script>
