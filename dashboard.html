@@ -2,13 +2,38 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Resultados | Ultimate Leisure Club</title>
-  <link rel="stylesheet" href="estilos.css">
+  <title>Resultados TS | Ultimate Leisure Club</title>
 
   <style>
-    table { width:100%; margin-top:20px; border-collapse:collapse; }
-    th, td { padding:6px; text-align:left; }
-    th { border-bottom:1px solid #ccc; }
+    body {
+      font-family: Arial, sans-serif;
+      background:#f4f6f8;
+    }
+
+    .login-container {
+      width:420px;
+      margin:80px auto;
+      background:#fff;
+      padding:30px;
+      border-radius:10px;
+      box-shadow:0 10px 25px rgba(0,0,0,.08);
+      text-align:center;
+    }
+
+    table {
+      width:100%;
+      margin-top:20px;
+      border-collapse:collapse;
+    }
+
+    th, td {
+      padding:6px;
+      text-align:left;
+    }
+
+    th {
+      border-bottom:1px solid #ccc;
+    }
 
     .valor {
       display:inline-block;
@@ -23,14 +48,6 @@
     .rojo  { background:#f8d7da; color:#721c24; }
     .verde { background:#d4edda; color:#155724; }
     .azul  { background:#d1ecf1; color:#0c5460; }
-
-    .info-mensaje {
-      margin-top:20px;
-      padding:15px;
-      background:#f9f9f9;
-      border-radius:6px;
-      color:#555;
-    }
   </style>
 </head>
 
@@ -41,109 +58,129 @@
   <p id="info-usuario"></p>
   <hr>
 
-  <!-- ================= TS ================= -->
-  <div id="ts" style="display:none;">
-    <h2>Travel Specialist – Métricas MTD</h2>
+  <h2>Travel Specialist – Métricas MTD</h2>
 
-    <table>
-      <tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
+  <table>
+    <tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
 
-      <tr>
-        <td>Noches Vendidas</td>
-        <td><span id="ts_noches" class="valor"></span></td>
-        <td><span id="ts_bono_noches" class="valor"></span></td>
-      </tr>
+    <tr>
+      <td>Noches Vendidas</td>
+      <td><span id="noches" class="valor"></span></td>
+      <td><span id="bono_noches" class="valor"></span></td>
+    </tr>
 
-      <tr>
-        <td>QA</td>
-        <td><span id="ts_qa" class="valor"></span></td>
-        <td><span id="ts_bono_qa" class="valor"></span></td>
-      </tr>
+    <tr>
+      <td>QA</td>
+      <td><span id="qa" class="valor"></span></td>
+      <td><span id="bono_qa" class="valor"></span></td>
+    </tr>
 
-      <tr>
-        <td>% Encuesta</td>
-        <td><span id="ts_encuesta" class="valor"></span></td>
-        <td><span id="ts_bono_encuesta" class="valor"></span></td>
-      </tr>
+    <tr>
+      <td>% Encuesta</td>
+      <td><span id="encuesta" class="valor"></span></td>
+      <td><span id="bono_encuesta" class="valor"></span></td>
+    </tr>
 
-      <tr>
-        <td>Score</td>
-        <td><span id="ts_score" class="valor"></span></td>
-        <td><span id="ts_bono_score" class="valor"></span></td>
-      </tr>
+    <tr>
+      <td>Score</td>
+      <td><span id="score" class="valor"></span></td>
+      <td><span id="bono_score" class="valor"></span></td>
+    </tr>
 
-      <tr>
-        <td>Ocupación RM</td>
-        <td><span id="ts_rm" class="valor"></span></td>
-        <td><span id="ts_bono_rm" class="valor"></span></td>
-      </tr>
+    <tr>
+      <td>Ocupación RM</td>
+      <td><span id="rm" class="valor"></span></td>
+      <td><span id="bono_rm" class="valor"></span></td>
+    </tr>
 
-      <tr>
-        <td>Ocupación PC</td>
-        <td><span id="ts_pc" class="valor"></span></td>
-        <td><span id="ts_bono_pc" class="valor"></span></td>
-      </tr>
+    <tr>
+      <td>Ocupación PC</td>
+      <td><span id="pc" class="valor"></span></td>
+      <td><span id="bono_pc" class="valor"></span></td>
+    </tr>
 
-      <tr>
-        <td>Ocupación PP</td>
-        <td><span id="ts_pp" class="valor"></span></td>
-        <td><span id="ts_bono_pp" class="valor"></span></td>
-      </tr>
+    <tr>
+      <td>Ocupación PP</td>
+      <td><span id="pp" class="valor"></span></td>
+      <td><span id="bono_pp" class="valor"></span></td>
+    </tr>
 
-      <tr>
-        <td>Ocupación SA</td>
-        <td><span id="ts_sa" class="valor"></span></td>
-        <td><span id="ts_bono_sa" class="valor"></span></td>
-      </tr>
+    <tr>
+      <td>Ocupación SA</td>
+      <td><span id="sa" class="valor"></span></td>
+      <td><span id="bono_sa" class="valor"></span></td>
+    </tr>
 
-      <tr>
-        <td>Ocupación CG</td>
-        <td><span id="ts_cg" class="valor"></span></td>
-        <td><span id="ts_bono_cg" class="valor"></span></td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- ================= MC ================= -->
-  <div id="mc" style="display:none;">
-    <h2>Member Care – Métricas MTD</h2>
-    <div class="info-mensaje">
-      Las métricas de Member Care aún no están configuradas.<br>
-      No se muestran métricas de otros equipos.
-    </div>
-  </div>
-
+    <tr>
+      <td>Ocupación CG</td>
+      <td><span id="cg" class="valor"></span></td>
+      <td><span id="bono_cg" class="valor"></span></td>
+    </tr>
+  </table>
 </div>
 
 <script>
-/* ================= CONFIG ================= */
-
 const URL_TS =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv";
 
-/* ================= SESIÓN ================= */
-
-const usuario = localStorage.getItem("usuario");
-const equipo  = localStorage.getItem("equipo");
-
-if (!usuario || !equipo) location.href = "index.html";
+const usuario = localStorage.getItem("usuario") || "Travel Specialist";
 
 document.getElementById("info-usuario").innerText =
-`Usuario: ${usuario} | Equipo: ${equipo === "MC" ? "Member Care" : "Travel Specialist"}`;
-
-/* ================= HELPERS ================= */
+  `Usuario: ${usuario} | Equipo: Travel Specialist`;
 
 const num = v => v ? Number(v.replace(/[^0-9.]/g,"")) : 0;
 
-const bonoQA     = q => q < 85 ? 0 : q <= 90 ? 30 : q <= 95 ? 50 : 80;
-const bonoScore  = s => s < 4.5 ? 0 : s < 4.8 ? 50 : 80;
-const bonoEncTS  = e => e < 74 ? 0 : e <= 79 ? 30 : e <= 85 ? 50 : 80;
+const bonoQA = q => q < 85 ? 0 : q <= 90 ? 30 : q <= 95 ? 50 : 80;
+const bonoScore = s => s < 4.5 ? 0 : s < 4.8 ? 50 : 80;
+const bonoEnc = e => e < 74 ? 0 : e <= 79 ? 30 : e <= 85 ? 50 : 80;
 
-function marcar(el, clase){
-  el.classList.remove("rojo","verde","azul");
-  el.classList.add(clase);
+function marcar(el, v, r, a){
+  el.classList.remove("rojo","azul","verde");
+  if (v < r) el.classList.add("rojo");
+  else if (v <= a) el.classList.add("azul");
+  else el.classList.add("verde");
 }
 
-function cargarCSV(url, cb){
-  fetch(url).then(r=>r.text()).then(csv=>{
+fetch(URL_TS)
+  .then(r => r.text())
+  .then(csv => {
     const rows = csv.trim().split("\n");
+    const h = rows.shift().split(",").map(x => x.toLowerCase());
+
+    rows.forEach(r => {
+      const o={},v=r.split(",");
+      h.forEach((k,i)=>o[k]=v[i]);
+      if (o.email !== usuario) return;
+
+      const noches = num(o.noches);
+      const qa = num(o.qa);
+      const enc = num(o.encuesta);
+      const score = num(o.score);
+
+      noches && (document.getElementById("noches").innerText = noches);
+      document.getElementById("bono_noches").innerText = Math.round(noches * 1.21);
+
+      qa && (document.getElementById("qa").innerText = qa);
+      document.getElementById("bono_qa").innerText = bonoQA(qa);
+      marcar(document.getElementById("qa"), qa, 85, 90);
+
+      enc && (document.getElementById("encuesta").innerText = enc);
+      document.getElementById("bono_encuesta").innerText = bonoEnc(enc);
+      marcar(document.getElementById("encuesta"), enc, 74, 79);
+
+      score && (document.getElementById("score").innerText = score);
+      document.getElementById("bono_score").innerText = bonoScore(score);
+      marcar(document.getElementById("score"), score, 4.5, 4.8);
+
+      ["rm","pc","pp","sa","cg"].forEach(k=>{
+        const val = num(o[k]);
+        document.getElementById(k).innerText = val;
+        const m = {rm:.95,pc:.75,pp:.65,sa:.55,cg:.55}[k];
+        document.getElementById("bono_"+k).innerText = Math.round(val*m);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
