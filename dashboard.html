@@ -1,4 +1,7 @@
-<!DOCTYPE html><!DOCTYPE  <meta charset="UTF-8">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
   <title>Resultados | Ultimate Leisure Club</title>
   <link rel="stylesheet" href="estilos.css">
 
@@ -29,142 +32,110 @@
   <p id="info-usuario"></p>
   <hr>
 
-  <!-- MEMBER CARE -->
-  <div id="mc" style="display:none;">
-    <h2>Member Care – Métricas MTD</h2>
-    <table>
-      <tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
-
-      <tr><td>SAME</td><td><span id="mc_same" class="valor"></span></td><td><span id="mc_bono_same" class="valor"></span></td></tr>
-      <tr><td>DNG</td><td><span id="mc_dng" class="valor"></span></td><td><span id="mc_bono_dng" class="valor"></span></td></tr>
-      <tr><td>% SAME</td><td><span id="mc_psame" class="valor"></span></td><td><span class="valor">—</span></td></tr>
-      <tr><td>Montos Recuperados</td><td><span id="mc_monto" class="valor"></span></td><td><span id="mc_bono_monto" class="valor"></span></td></tr>
-      <tr><td>% WC</td><td><span id="mc_wc" class="valor"></span></td><td><span id="mc_bono_wc" class="valor"></span></td></tr>
-      <tr><td>% Encuesta</td><td><span id="mc_encuesta" class="valor"></span></td><td><span id="mc_bono_encuesta" class="valor"></span></td></tr>
-      <tr><td>QA</td><td><span id="mc_qa" class="valor"></span></td><td><span id="mc_bono_qa" class="valor"></span></td></tr>
-      <tr><td>Score</td><td><span id="mc_score" class="valor"></span></td><td><span id="mc_bono_score" class="valor"></span></td></tr>
-    </table>
-  </div>
-
-  <!-- TRAVEL SPECIALIST -->
+  <!-- TS -->
   <div id="ts" style="display:none;">
     <h2>Travel Specialist – Métricas MTD</h2>
     <table>
       <tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
 
-      <tr><td>Noches Vendidas</td><td><span id="ts_noches" class="valor"></span></td><td><span id="ts_bono_noches" class="valor"></span></td></tr>
-      <tr><td>QA</td><td><span id="ts_qa" class="valor"></span></td><td><span id="ts_bono_qa" class="valor"></span></td></tr>
-      <tr><td>% Encuesta</td><td><span id="ts_encuesta" class="valor"></span></td><td><span id="ts_bono_encuesta" class="valor"></span></td></tr>
-      <tr><td>Score</td><td><span id="ts_score" class="valor"></span></td><td><span id="ts_bono_score" class="valor"></span></td></tr>
-      <tr><td>Ocupación RM</td><td><span id="ts_rm" class="valor"></span></td><td><span id="ts_bono_rm" class="valor"></span></td></tr>
-      <tr><td>Ocupación PC</td><td><span id="ts_pc" class="valor"></span></td><td><span id="ts_bono_pc" class="valor"></span></td></tr>
-      <tr><td>Ocupación PP</td><td><span id="ts_pp" class="valor"></span></td><td><span id="ts_bono_pp" class="valor"></span></td></tr>
-      <tr><td>Ocupación SA</td><td><span id="ts_sa" class="valor"></span></td><td><span id="ts_bono_sa" class="valor"></span></td></tr>
-      <tr><td>Ocupación CG</td><td><span id="ts_cg" class="valor"></span></td><td><span id="ts_bono_cg" class="valor"></span></td></tr>
+      <tr><td>Noches Vendidas</td>
+        <td><span id="ts_noches" class="valor"></span></td>
+        <td><span id="ts_bono_noches" class="valor"></span></td></tr>
+
+      <tr><td>QA</td>
+        <td><span id="ts_qa" class="valor"></span></td>
+        <td><span id="ts_bono_qa" class="valor"></span></td></tr>
+
+      <tr><td>% Encuesta</td>
+        <td><span id="ts_encuesta" class="valor"></span></td>
+        <td><span id="ts_bono_encuesta" class="valor"></span></td></tr>
+
+      <tr><td>Score</td>
+        <td><span id="ts_score" class="valor"></span></td>
+        <td><span id="ts_bono_score" class="valor"></span></td></tr>
+
+      <tr><td>Ocupación RM</td>
+        <td><span id="ts_rm" class="valor"></span></td>
+        <td><span id="ts_bono_rm" class="valor"></span></td></tr>
+
+      <tr><td>Ocupación PC</td>
+        <td><span id="ts_pc" class="valor"></span></td>
+        <td><span id="ts_bono_pc" class="valor"></span></td></tr>
+
+      <tr><td>Ocupación PP</td>
+        <td><span id="ts_pp" class="valor"></span></td>
+        <td><span id="ts_bono_pp" class="valor"></span></td></tr>
+
+      <tr><td>Ocupación SA</td>
+        <td><span id="ts_sa" class="valor"></span></td>
+        <td><span id="ts_bono_sa" class="valor"></span></td></tr>
+
+      <tr><td>Ocupación CG</td>
+        <td><span id="ts_cg" class="valor"></span></td>
+        <td><span id="ts_bono_cg" class="valor"></span></td></tr>
     </table>
   </div>
 </div>
 
 <script>
-/* ===== CONFIG ===== */
-const URL_MC = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=0&single=true&output=csv";
-const URL_TS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv";
+const URL_TS =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv";
 
-/* ===== SESIÓN ===== */
 const usuario = localStorage.getItem("usuario");
 const equipo  = localStorage.getItem("equipo");
-if (!usuario || !equipo) window.location.href = "index.html";
+
+if (!usuario || !equipo) location.href = "index.html";
 
 document.getElementById("info-usuario").innerText =
-  "Usuario: " + usuario + " | Equipo: " +
-  (equipo === "MC" ? "Member Care" : "Travel Specialist");
+  `Usuario: ${usuario} | Equipo: Travel Specialist`;
 
-/* ===== HELPERS ===== */
-function num(v){ return v ? Number(v.replace(/[^0-9.]/g,"")) : null; }
-function pintar(id,v,r){
-  const e=document.getElementById(id);
-  e.classList.remove("rojo","verde","azul");
-  if(v===null){ e.innerText="—"; return; }
-  e.innerText=v;
-  if(r.azul!==undefined && v>=r.azul) e.classList.add("azul");
-  else if(v>=r.verde) e.classList.add("verde");
-  else e.classList.add("rojo");
+function num(v){
+  return v ? Number(v.replace(/[^0-9.]/g,"")) : 0;
 }
 
-/* ===== BONOS ===== */
 const bonoQA = q => q<85?0:q<=90?30:q<=95?50:80;
 const bonoScore = s => s<4.5?0:s<4.8?50:80;
-const encTS = e => e<74?0:e<=79?30:e<=85?50:80;
-const encMC = e => e<66?0:e<=72?30:e<=79?50:80;
-const bonoSAME = s => s>=20?s*25:s>=15?s*23:s>=1?s*22:0;
+const bonoEncTS = e => e<74?0:e<=79?30:e<=85?50:80;
 
-/* ===== CSV ===== */
 function cargarCSV(url, cb){
   fetch(url).then(r=>r.text()).then(csv=>{
-    const l=csv.trim().split("\n"), h=l.shift().split(",").map(x=>x.toLowerCase());
-    l.forEach(f=>{
-      const o={},v=f.split(",");
+    const rows = csv.trim().split("\n");
+    const h = rows.shift().split(",").map(x=>x.toLowerCase());
+    rows.forEach(r=>{
+      const o={},v=r.split(",");
       h.forEach((k,i)=>o[k]=v[i]);
-      if(o.email===usuario) cb(o);
+      if(o.email === usuario) cb(o);
     });
   });
 }
 
-/* ===== MC ===== */
-if(equipo==="MC"){
-  mc.style.display="block";
-  cargarCSV(URL_MC,f=>{
-    const same=num(f.same), ps=num(f.psame), dng=num(f.dng), wc=num(f.wc),
-          m=num(f.monto), qa=num(f.qa), en=num(f.encuesta), sc=num(f.score);
+document.getElementById("ts").style.display = "block";
 
-    pintar("mc_same",same,{verde:12,azul:15});
-    pintar("mc_psame",ps,{verde:70});
-    pintar("mc_monto",m,{verde:8000,azul:15000});
-    pintar("mc_wc",wc,{verde:96});
-    pintar("mc_encuesta",en,{verde:73,azul:80});
-    pintar("mc_qa",qa,{verde:91,azul:96});
-    pintar("mc_score",sc,{verde:4.5,azul:4.8});
+cargarCSV(URL_TS, f => {
+  const noches = num(f.noches);
+  const qa = num(f.qa);
+  const enc = num(f.encuesta);
+  const score = num(f.score);
 
-    mc_dng.innerText=dng;
-    mc_bono_same.innerText=bonoSAME(same);
-    mc_bono_dng.innerText=ps>=70?dng*10:0;
-    mc_bono_wc.innerText=wc>=96?120:0;
-    mc_bono_monto.innerText=Math.round(m*0.01);
-    mc_bono_qa.innerText=bonoQA(qa);
-    mc_bono_encuesta.innerText=encMC(en);
-    mc_bono_score.innerText=bonoScore(sc);
+  document.getElementById("ts_noches").innerText = noches;
+  document.getElementById("ts_qa").innerText = qa;
+  document.getElementById("ts_encuesta").innerText = enc;
+  document.getElementById("ts_score").innerText = score;
+
+  document.getElementById("ts_bono_noches").innerText = Math.round(noches * 1.21);
+  document.getElementById("ts_bono_qa").innerText = bonoQA(qa);
+  document.getElementById("ts_bono_encuesta").innerText = bonoEncTS(enc);
+  document.getElementById("ts_bono_score").innerText = bonoScore(score);
+
+  ["rm","pc","pp","sa","cg"].forEach(k=>{
+    document.getElementById(`ts_${k}`).innerText = num(f[k]);
+    const m = {rm:.95,pc:.75,pp:.65,sa:.55,cg:.55}[k];
+    document.getElementById(`ts_bono_${k}`).innerText =
+      Math.round(num(f[k]) * m);
   });
-}
-
-/* ===== TS ===== */
-if(equipo==="TS"){
-  ts.style.display="block";
-  cargarCSV(URL_TS,f=>{
-    const n=num(f.noches),qa=num(f.qa),en=num(f.encuesta),sc=num(f.score),
-          rm=num(f.rm),pc=num(f.pc),pp=num(f.pp),sa=num(f.sa),cg=num(f.cg);
-
-    pintar("ts_noches",n,{verde:500,azul:600});
-    pintar("ts_qa",qa,{verde:91,azul:96});
-    pintar("ts_encuesta",en,{verde:80,azul:86});
-    pintar("ts_score",sc,{verde:4.5,azul:4.8});
-
-    ts_bono_noches.innerText=Math.round(n*1.21);
-    ts_bono_qa.innerText=bonoQA(qa);
-    ts_bono_encuesta.innerText=encTS(en);
-    ts_bono_score.innerText=bonoScore(sc);
-    ts_bono_rm.innerText=Math.round(rm*0.95);
-    ts_bono_pc.innerText=Math.round(pc*0.75);
-    ts_bono_pp.innerText=Math.round(pp*0.65);
-    ts_bono_sa.innerText=Math.round(sa*0.55);
-    ts_bono_cg.innerText=Math.round(cg*0.55);
-
-    ts_rm.innerText=rm; ts_pc.innerText=pc; ts_pp.innerText=pp;
-    ts_sa.innerText=sa; ts_cg.innerText=cg;
-  });
-}
+});
 </script>
+
 </body>
 </html>
-<html lang="es">
-<head>
 
