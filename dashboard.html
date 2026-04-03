@@ -20,17 +20,8 @@
     .rojo{background:#f8d7da;color:#721c24}
     .verde{background:#d4edda;color:#155724}
     .azul{background:#d1ecf1;color:#0c5460}
-
-    .total-row td {
-      border-top:2px solid #000;
-      font-weight:bold;
-    }
-
-    .leyenda {
-      margin-top:15px;
-      font-size:12px;
-      color:#555;
-    }
+    .total-row td { border-top:2px solid #000; font-weight:bold; }
+    .leyenda { margin-top:15px; font-size:12px; color:#555; }
   </style>
 </head>
 
@@ -105,36 +96,39 @@ document.getElementById("info-usuario").innerText =
 `Usuario: ${usuario} | Equipo: ${equipo==="MC"?"Member Care":"Travel Specialist"}`;
 
 const num=v=>v?Number(String(v).replace(/[^0-9.]/g,"")):0;
-const marcar=(el,c)=>{el.classList.remove("rojo","verde","azul");if(c)el.classList.add(c)};
 
 /* ================= TS ================= */
 if(equipo==="TS"){
 document.getElementById("ts").style.display="block";
-
-let totalTS = 0;
+let totalTS=0;
 
 fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv")
 .then(r=>r.text()).then(csv=>{
 const rows=csv.trim().split("\n"),h=rows.shift().split(",").map(x=>x.toLowerCase());
 rows.forEach(r=>{
-const o={},v=r.split(",");h.forEach((k,i)=>o[k]=v[i]);if(o.email!==usuario)return;
+const o={},v=r.split(",");h.forEach((k,i)=>o[k]=v[i]);
+if(o.email!==usuario)return;
 
-const noches=num(o.noches); bono_noches.innerText=Math.round(noches*1.21); totalTS+=Math.round(noches*1.21);
+noches.innerText=num(o.noches);
+bono_noches.innerText=Math.round(num(o.noches)*1.21); totalTS+=Number(bono_noches.innerText);
 
-const qa=num(o.qa); bono_qa.innerText=qa<91?0:qa<=95?50:80; totalTS+=qa<91?0:qa<=95?50:80;
+qa.innerText=num(o.qa)+"%";
+bono_qa.innerText=num(o.qa)<91?0:num(o.qa)<=95?50:80; totalTS+=Number(bono_qa.innerText);
 
-const enc=num(o.encuesta); bono_encuesta.innerText=enc<80?0:enc<=85?50:80; totalTS+=enc<80?0:enc<=85?50:80;
+encuesta.innerText=num(o.encuesta)+"%";
+bono_encuesta.innerText=num(o.encuesta)<80?0:num(o.encuesta)<=85?50:80; totalTS+=Number(bono_encuesta.innerText);
 
-const sc=num(o.score); bono_score.innerText=sc<4.5?0:sc<4.8?50:80; totalTS+=sc<4.5?0:sc<4.8?50:80;
+score.innerText=num(o.score);
+bono_score.innerText=num(o.score)<4.5?0:num(o.score)<4.8?50:80; totalTS+=Number(bono_score.innerText);
 
 ["rm","pc","pp","sa","cg"].forEach(k=>{
-const val=num(o[k]);
-const bono=Math.round(val*{rm:.95,pc:.75,pp:.65,sa:.55,cg:.55}[k]);
-document.getElementById("bono_"+k).innerText=bono;
-totalTS+=bono;
+document.getElementById(k).innerText=num(o[k]);
+const b=Math.round(num(o[k])*{rm:.95,pc:.75,pp:.65,sa:.55,cg:.55}[k]);
+document.getElementById("bono_"+k).innerText=b;
+totalTS+=b;
 });
 
-total_bono_ts.innerText = totalTS;
+total_bono_ts.innerText=totalTS;
 });
 });
 }
@@ -142,47 +136,50 @@ total_bono_ts.innerText = totalTS;
 /* ================= MC ================= */
 if(equipo==="MC"){
 document.getElementById("mc").style.display="block";
-
-let totalMC = 0;
+let totalMC=0;
 
 fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=0&single=true&output=csv")
 .then(r=>r.text()).then(csv=>{
 const rows=csv.trim().split("\n"),h=rows.shift().split(",").map(x=>x.toLowerCase());
 rows.forEach(r=>{
-const o={},v=r.split(",");h.forEach((k,i)=>o[k]=v[i]);if(o.email!==usuario)return;
+const o={},v=r.split(",");h.forEach((k,i)=>o[k]=v[i]);
+if(o.email!==usuario)return;
 
-const same=num(o.same);
-const bonoSame=same<=14?same*22:same<=19?same*23:same*25;
-mc_bono_same.innerText=bonoSame; totalMC+=bonoSame;
+mc_same.innerText=num(o.same);
+const bs=num(o.same)<=14?num(o.same)*22:num(o.same)<=19?num(o.same)*23:num(o.same)*25;
+mc_bono_same.innerText=bs; totalMC+=bs;
 
-const ps=num(o.psame);
-const bonoDng=(ps>=70||same>=17)?num(o.dng)*10:0;
-mc_bono_dng.innerText=bonoDng; totalMC+=bonoDng;
+mc_dng.innerText=num(o.dng);
+const bd=(num(o.psame)>=70||num(o.same)>=17)?num(o.dng)*10:0;
+mc_bono_dng.innerText=bd; totalMC+=bd;
 
-const monto=num(o.monto);
-const bonoMonto=Math.round(monto*0.01);
-mc_bono_monto.innerText=bonoMonto; totalMC+=bonoMonto;
+mc_psame.innerText=num(o.psame)+"%";
 
-const wc=num(o.wc);
-const bonoWC=wc>=96?120:0;
-mc_bono_wc.innerText=bonoWC; totalMC+=bonoWC;
+mc_monto.innerText=num(o.monto);
+const bm=Math.round(num(o.monto)*0.01);
+mc_bono_monto.innerText=bm; totalMC+=bm;
 
-const enc=num(o.encuesta);
-const bonoEnc=enc<66?0:enc<=72?30:enc<=79?50:80;
-mc_bono_encuesta.innerText=bonoEnc; totalMC+=bonoEnc;
+mc_wc.innerText=num(o.wc)+"%";
+const bw=num(o.wc)>=96?120:0;
+mc_bono_wc.innerText=bw; totalMC+=bw;
 
-const qa=num(o.qa);
-const bonoQA=qa<85?0:qa<=90?30:qa<=95?50:80;
-mc_bono_qa.innerText=bonoQA; totalMC+=bonoQA;
+mc_encuesta.innerText=num(o.encuesta)+"%";
+const be=num(o.encuesta)<66?0:num(o.encuesta)<=72?30:num(o.encuesta)<=79?50:80;
+mc_bono_encuesta.innerText=be; totalMC+=be;
 
-const sc=num(o.score);
-const bonoScore=sc<4.5?0:sc<4.8?50:80;
-mc_bono_score.innerText=bonoScore; totalMC+=bonoScore;
+mc_qa.innerText=num(o.qa)+"%";
+const bqa=num(o.qa)<85?0:num(o.qa)<=90?30:num(o.qa)<=95?50:80;
+mc_bono_qa.innerText=bqa; totalMC+=bqa;
 
-total_bono_mc.innerText = totalMC;
+mc_score.innerText=num(o.score);
+const bsc=num(o.score)<4.5?0:num(o.score)<4.8?50:80;
+mc_bono_score.innerText=bsc; totalMC+=bsc;
+
+total_bono_mc.innerText=totalMC;
 });
 });
 }
 </script>
 </body>
 </html>
+``
