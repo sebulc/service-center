@@ -19,6 +19,14 @@
       font-weight:bold;
       background:#f4f6f8;
     }
+
+    .info-mensaje {
+      margin-top:20px;
+      padding:15px;
+      background:#f9f9f9;
+      border-radius:6px;
+      color:#555;
+    }
   </style>
 </head>
 
@@ -73,6 +81,17 @@
         <td><span id="ts_bono_cg" class="valor"></span></td></tr>
     </table>
   </div>
+
+  <!-- ================= MC ================= -->
+  <div id="mc" style="display:none;">
+    <h2>Member Concierge – Métricas MTD</h2>
+
+    <div class="info-mensaje">
+      Las métricas de Member Concierge se encuentran actualmente en configuración.<br><br>
+      Para información adicional, por favor contacta con tu supervisor.
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -80,9 +99,6 @@
 
 const URL_TS =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv";
-
-// cuando tengas el CSV MC, ponlo aquí
-const URL_MC = "";
 
 /* ================= SESIÓN ================= */
 
@@ -100,9 +116,9 @@ document.getElementById("info-usuario").innerText =
 
 const num = v => v ? Number(v.replace(/[^0-9.]/g,"")) : 0;
 
-const bonoQA     = q => q < 85 ? 0 : q <= 90 ? 30 : q <= 95 ? 50 : 80;
-const bonoScore  = s => s < 4.5 ? 0 : s < 4.8 ? 50 : 80;
-const bonoEncTS  = e => e < 74 ? 0 : e <= 79 ? 30 : e <= 85 ? 50 : 80;
+const bonoQA    = q => q < 85 ? 0 : q <= 90 ? 30 : q <= 95 ? 50 : 80;
+const bonoScore = s => s < 4.5 ? 0 : s < 4.8 ? 50 : 80;
+const bonoEncTS = e => e < 74 ? 0 : e <= 79 ? 30 : e <= 85 ? 50 : 80;
 
 function cargarCSV(url, cb){
   fetch(url)
@@ -136,9 +152,9 @@ if (equipo === "TS") {
     document.getElementById("ts_score").innerText = score;
 
     document.getElementById("ts_bono_noches").innerText = Math.round(noches * 1.21);
-    document.getElementById("ts_bono_qa").innerText     = bonoQA(qa);
+    document.getElementById("ts_bono_qa").innerText = bonoQA(qa);
     document.getElementById("ts_bono_encuesta").innerText = bonoEncTS(enc);
-    document.getElementById("ts_bono_score").innerText  = bonoScore(score);
+    document.getElementById("ts_bono_score").innerText = bonoScore(score);
 
     ["rm","pc","pp","sa","cg"].forEach(k => {
       document.getElementById(`ts_${k}`).innerText = num(f[k]);
@@ -150,11 +166,12 @@ if (equipo === "TS") {
 
 } else if (equipo === "MC") {
 
-  alert("Dashboard MC aún no configurado. No se muestran métricas TS.");
+  document.getElementById("mc").style.display = "block";
 
 }
 </script>
 
 </body>
 </html>
+
 
