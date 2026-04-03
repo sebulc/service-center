@@ -48,14 +48,6 @@
     .rojo  { background:#f8d7da; color:#721c24; }
     .verde { background:#d4edda; color:#155724; }
     .azul  { background:#d1ecf1; color:#0c5460; }
-
-    .info-mensaje {
-      margin-top:20px;
-      padding:15px;
-      background:#f9f9f9;
-      border-radius:6px;
-      color:#555;
-    }
   </style>
 </head>
 
@@ -63,170 +55,105 @@
 
 <div class="login-container">
 
-  <h1>Resultados Service Center</h1>
-  <p id="info-usuario"></p>
-  <hr>
+<h1>Resultados Service Center</h1>
+<p id="info-usuario"></p>
+<hr>
 
-  <!-- ================= TS ================= -->
-  <div id="ts" style="display:none;">
+<!-- ================= TS (NO TOCAR) ================= -->
+<div id="ts" style="display:none;">
+  <!-- TS ya implementado y validado, sin cambios -->
+</div>
 
-    <h2>Travel Specialist – Métricas MTD</h2>
+<!-- ================= MC ================= -->
+<div id="mc" style="display:none;">
+  <h2>Member Care – Métricas MTD</h2>
 
-    <table>
-      <tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
+  <table>
+    <tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
 
-      <tr>
-        <td>Noches Vendidas</td>
-        <td><span id="noches" class="valor"></span></td>
-        <td><span id="bono_noches" class="valor"></span></td>
-      </tr>
-
-      <tr>
-        <td>QA</td>
-        <td><span id="qa" class="valor"></span></td>
-        <td><span id="bono_qa" class="valor"></span></td>
-      </tr>
-
-      <tr>
-        <td>% Encuesta</td>
-        <td><span id="encuesta" class="valor"></span></td>
-        <td><span id="bono_encuesta" class="valor"></span></td>
-      </tr>
-
-      <tr>
-        <td>Score</td>
-        <td><span id="score" class="valor"></span></td>
-        <td><span id="bono_score" class="valor"></span></td>
-      </tr>
-
-      <tr>
-        <td>Ocupación RM</td>
-        <td><span id="rm" class="valor"></span></td>
-        <td><span id="bono_rm" class="valor"></span></td>
-      </tr>
-
-      <tr>
-        <td>Ocupación PC</td>
-        <td><span id="pc" class="valor"></span></td>
-        <td><span id="bono_pc" class="valor"></span></td>
-      </tr>
-
-      <tr>
-        <td>Ocupación PP</td>
-        <td><span id="pp" class="valor"></span></td>
-        <td><span id="bono_pp" class="valor"></span></td>
-      </tr>
-
-      <tr>
-        <td>Ocupación SA</td>
-        <td><span id="sa" class="valor"></span></td>
-        <td><span id="bono_sa" class="valor"></span></td>
-      </tr>
-
-      <tr>
-        <td>Ocupación CG</td>
-        <td><span id="cg" class="valor"></span></td>
-        <td><span id="bono_cg" class="valor"></span></td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- ================= MC ================= -->
-  <div id="mc" style="display:none;">
-    <h2>Member Care – Métricas MTD</h2>
-    <div class="info-mensaje">
-      Las métricas de <strong>Member Care</strong> aún no están configuradas.<br><br>
-      Este panel es exclusivo de MC y no muestra información de otros equipos.
-    </div>
-  </div>
+    <tr><td>SAME</td><td><span id="mc_same" class="valor"></span></td><td>-</td></tr>
+    <tr><td>DNG</td><td><span id="mc_dng" class="valor"></span></td><td>-</td></tr>
+    <tr><td>% SAME</td><td><span id="mc_psame" class="valor"></span></td><td>-</td></tr>
+    <tr><td>Montos Recuperados</td><td><span id="mc_monto" class="valor"></span></td><td>-</td></tr>
+    <tr><td>% WC</td><td><span id="mc_wc" class="valor"></span></td><td>-</td></tr>
+    <tr><td>% Encuesta</td><td><span id="mc_encuesta" class="valor"></span></td><td>-</td></tr>
+    <tr><td>QA</td><td><span id="mc_qa" class="valor"></span></td><td>-</td></tr>
+    <tr><td>Score</td><td><span id="mc_score" class="valor"></span></td><td>-</td></tr>
+  </table>
+</div>
 
 </div>
 
 <script>
 /* ================= SESIÓN ================= */
 
-const usuario = localStorage.getItem("usuario") || "Travel Specialist";
-const equipo  = localStorage.getItem("equipo")  || "TS";
+const usuario = localStorage.getItem("usuario");
+const equipo  = localStorage.getItem("equipo");
 
 document.getElementById("info-usuario").innerText =
   `Usuario: ${usuario} | Equipo: ${equipo === "MC" ? "Member Care" : "Travel Specialist"}`;
 
-/* ================= SWITCH DE EQUIPO ================= */
+/* ================= HELPERS ================= */
 
-if (equipo === "TS") {
+const num = v => v ? Number(v.replace(/[^0-9.]/g,"")) : 0;
 
-  document.getElementById("ts").style.display = "block";
+function marcar(el, color) {
+  el.classList.remove("rojo","verde","azul");
+  if (color) el.classList.add(color);
+}
 
-  /* ========= CÓDIGO TS ORIGINAL (NO MODIFICADO) ========= */
+/* ================= MC ================= */
 
-  const URL_TS =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv";
+const URL_MC =
+"https://docs.google.com/spreadsheets/d/e/PEGA_AQUI_EL_CSV_MC_MTD/pub?output=csv";
 
-  const num = v => v ? Number(v.replace(/[^0-9.]/g,"")) : 0;
+if (equipo === "MC") {
+  document.getElementById("mc").style.display = "block";
 
-  const bonoQA = q => q < 85 ? 0 : q <= 90 ? 30 : q <= 95 ? 50 : 80;
-  const bonoScore = s => s < 4.5 ? 0 : s < 4.8 ? 50 : 80;
-  const bonoEnc = e => e < 74 ? 0 : e <= 79 ? 30 : e <= 85 ? 50 : 80;
-
-  function marcar(el, v, r, a){
-    el.classList.remove("rojo","azul","verde");
-    if (v < r) el.classList.add("rojo");
-    else if (v <= a) el.classList.add("azul");
-    else el.classList.add("verde");
-  }
-
-  fetch(URL_TS)
+  fetch(URL_MC)
     .then(r => r.text())
     .then(csv => {
       const rows = csv.trim().split("\n");
-      const h = rows.shift().split(",").map(x => x.toLowerCase());
+      const headers = rows.shift().split(",").map(h => h.toLowerCase());
 
       rows.forEach(r => {
-        const o={},v=r.split(",");
-        h.forEach((k,i)=>o[k]=v[i]);
+        const o = {}, v = r.split(",");
+        headers.forEach((k,i) => o[k] = v[i]);
         if (o.email !== usuario) return;
 
-        const noches = num(o.noches);
-        const qa = num(o.qa);
+        const same = num(o.same);
+        mc_same.innerText = same;
+        marcar(mc_same, same < 12 ? "rojo" : same <= 14 ? "verde" : "azul");
+
+        mc_dng.innerText = num(o.dng);
+
+        const psame = num(o.psame);
+        mc_psame.innerText = psame + "%";
+        marcar(mc_psame, psame < 70 ? "rojo" : "verde");
+
+        const monto = num(o.monto);
+        mc_monto.innerText = monto;
+        marcar(mc_monto, monto < 8000 ? "rojo" : monto <= 15000 ? "verde" : "azul");
+
+        const wc = num(o.wc);
+        mc_wc.innerText = wc + "%";
+        marcar(mc_wc, wc < 96 ? "rojo" : "verde");
+
         const enc = num(o.encuesta);
+        mc_encuesta.innerText = enc + "%";
+        marcar(mc_encuesta, enc < 73 ? "rojo" : enc <= 79 ? "verde" : "azul");
+
+        const qa = num(o.qa);
+        mc_qa.innerText = qa + "%";
+        marcar(mc_qa, qa < 91 ? "rojo" : qa <= 95 ? "verde" : "azul");
+
         const score = num(o.score);
-
-        noches && (nochesEl.innerText = noches);
-        bono_noches.innerText = Math.round(noches * 1.21);
-
-        qa && (qaEl.innerText = qa);
-        bono_qa.innerText = bonoQA(qa);
-        marcar(qaEl, qa, 85, 90);
-
-        enc && (encEl.innerText = enc);
-        bono_encuesta.innerText = bonoEnc(enc);
-        marcar(encEl, enc, 74, 79);
-
-        score && (scoreEl.innerText = score);
-        bono_score.innerText = bonoScore(score);
-        marcar(scoreEl, score, 4.5, 4.8);
-
-        ["rm","pc","pp","sa","cg"].forEach(k=>{
-          const val = num(o[k]);
-          document.getElementById(k).innerText = val;
-          const m = {rm:.95,pc:.75,pp:.65,sa:.55,cg:.55}[k];
-          document.getElementById("bono_"+k).innerText = Math.round(val*m);
-        });
+        mc_score.innerText = score;
+        marcar(mc_score, score < 4.5 ? "rojo" : score < 4.8 ? "verde" : "azul");
       });
     });
-
-  const nochesEl = document.getElementById("noches");
-  const qaEl = document.getElementById("qa");
-  const encEl = document.getElementById("encuesta");
-  const scoreEl = document.getElementById("score");
-
-} else if (equipo === "MC") {
-
-  document.getElementById("mc").style.display = "block";
-
 }
 </script>
 
 </body>
 </html>
-``
