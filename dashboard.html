@@ -19,9 +19,6 @@
       font-weight:bold;
       background:#f4f6f8;
     }
-    .rojo  { background:#f8d7da; color:#721c24; }
-    .verde { background:#d4edda; color:#155724; }
-    .azul  { background:#d1ecf1; color:#0c5460; }
   </style>
 </head>
 
@@ -32,9 +29,10 @@
   <p id="info-usuario"></p>
   <hr>
 
-  <!-- TS -->
+  <!-- ================= TS ================= -->
   <div id="ts" style="display:none;">
     <h2>Travel Specialist – Métricas MTD</h2>
+
     <table>
       <tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
 
@@ -78,62 +76,83 @@
 </div>
 
 <script>
+/* ================= CONFIG ================= */
+
 const URL_TS =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv";
+
+// cuando tengas el CSV MC, ponlo aquí
+const URL_MC = "";
+
+/* ================= SESIÓN ================= */
 
 const usuario = localStorage.getItem("usuario");
 const equipo  = localStorage.getItem("equipo");
 
-if (!usuario || !equipo) location.href = "index.html";
+if (!usuario || !equipo) {
+  location.href = "index.html";
+}
 
 document.getElementById("info-usuario").innerText =
-  `Usuario: ${usuario} | Equipo: Travel Specialist`;
+  `Usuario: ${usuario} | Equipo: ${equipo === "MC" ? "Member Concierge" : "Travel Specialist"}`;
 
-function num(v){
-  return v ? Number(v.replace(/[^0-9.]/g,"")) : 0;
-}
+/* ================= HELPERS ================= */
 
-const bonoQA = q => q<85?0:q<=90?30:q<=95?50:80;
-const bonoScore = s => s<4.5?0:s<4.8?50:80;
-const bonoEncTS = e => e<74?0:e<=79?30:e<=85?50:80;
+const num = v => v ? Number(v.replace(/[^0-9.]/g,"")) : 0;
+
+const bonoQA     = q => q < 85 ? 0 : q <= 90 ? 30 : q <= 95 ? 50 : 80;
+const bonoScore  = s => s < 4.5 ? 0 : s < 4.8 ? 50 : 80;
+const bonoEncTS  = e => e < 74 ? 0 : e <= 79 ? 30 : e <= 85 ? 50 : 80;
 
 function cargarCSV(url, cb){
-  fetch(url).then(r=>r.text()).then(csv=>{
-    const rows = csv.trim().split("\n");
-    const h = rows.shift().split(",").map(x=>x.toLowerCase());
-    rows.forEach(r=>{
-      const o={},v=r.split(",");
-      h.forEach((k,i)=>o[k]=v[i]);
-      if(o.email === usuario) cb(o);
+  fetch(url)
+    .then(r => r.text())
+    .then(csv => {
+      const rows = csv.trim().split("\n");
+      const h = rows.shift().split(",").map(x => x.toLowerCase());
+      rows.forEach(r => {
+        const o = {}, v = r.split(",");
+        h.forEach((k,i) => o[k] = v[i]);
+        if (o.email === usuario) cb(o);
+      });
     });
-  });
 }
 
-document.getElementById("ts").style.display = "block";
+/* ================= LÓGICA POR EQUIPO ================= */
 
-cargarCSV(URL_TS, f => {
-  const noches = num(f.noches);
-  const qa = num(f.qa);
-  const enc = num(f.encuesta);
-  const score = num(f.score);
+if (equipo === "TS") {
 
-  document.getElementById("ts_noches").innerText = noches;
-  document.getElementById("ts_qa").innerText = qa;
-  document.getElementById("ts_encuesta").innerText = enc;
-  document.getElementById("ts_score").innerText = score;
+  document.getElementById("ts").style.display = "block";
 
-  document.getElementById("ts_bono_noches").innerText = Math.round(noches * 1.21);
-  document.getElementById("ts_bono_qa").innerText = bonoQA(qa);
-  document.getElementById("ts_bono_encuesta").innerText = bonoEncTS(enc);
-  document.getElementById("ts_bono_score").innerText = bonoScore(score);
+  cargarCSV(URL_TS, f => {
+    const noches = num(f.noches);
+    const qa     = num(f.qa);
+    const enc    = num(f.encuesta);
+    const score  = num(f.score);
 
-  ["rm","pc","pp","sa","cg"].forEach(k=>{
-    document.getElementById(`ts_${k}`).innerText = num(f[k]);
-    const m = {rm:.95,pc:.75,pp:.65,sa:.55,cg:.55}[k];
-    document.getElementById(`ts_bono_${k}`).innerText =
-      Math.round(num(f[k]) * m);
+    document.getElementById("ts_noches").innerText = noches;
+    document.getElementById("ts_qa").innerText = qa;
+    document.getElementById("ts_encuesta").innerText = enc;
+    document.getElementById("ts_score").innerText = score;
+
+    document.getElementById("ts_bono_noches").innerText = Math.round(noches * 1.21);
+    document.getElementById("ts_bono_qa").innerText     = bonoQA(qa);
+    document.getElementById("ts_bono_encuesta").innerText = bonoEncTS(enc);
+    document.getElementById("ts_bono_score").innerText  = bonoScore(score);
+
+    ["rm","pc","pp","sa","cg"].forEach(k => {
+      document.getElementById(`ts_${k}`).innerText = num(f[k]);
+      const m = {rm:.95, pc:.75, pp:.65, sa:.55, cg:.55}[k];
+      document.getElementById(`ts_bono_${k}`).innerText =
+        Math.round(num(f[k]) * m);
+    });
   });
-});
+
+} else if (equipo === "MC") {
+
+  alert("Dashboard MC aún no configurado. No se muestran métricas TS.");
+
+}
 </script>
 
 </body>
