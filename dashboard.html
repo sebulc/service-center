@@ -20,6 +20,11 @@
       background:#f4f6f8;
     }
 
+    /* ==== COLORES RESTAURADOS ==== */
+    .rojo  { background:#f8d7da; color:#721c24; }
+    .verde { background:#d4edda; color:#155724; }
+    .azul  { background:#d1ecf1; color:#0c5460; }
+
     .info-mensaje {
       margin-top:20px;
       padding:15px;
@@ -44,130 +49,101 @@
     <table>
       <tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
 
-      <tr><td>Noches Vendidas</td>
+      <tr>
+        <td>Noches Vendidas</td>
         <td><span id="ts_noches" class="valor"></span></td>
-        <td><span id="ts_bono_noches" class="valor"></span></td></tr>
+        <td><span id="ts_bono_noches" class="valor"></span></td>
+      </tr>
 
-      <tr><td>QA</td>
+      <tr>
+        <td>QA</td>
         <td><span id="ts_qa" class="valor"></span></td>
-        <td><span id="ts_bono_qa" class="valor"></span></td></tr>
+        <td><span id="ts_bono_qa" class="valor"></span></td>
+      </tr>
 
-      <tr><td>% Encuesta</td>
+      <tr>
+        <td>% Encuesta</td>
         <td><span id="ts_encuesta" class="valor"></span></td>
-        <td><span id="ts_bono_encuesta" class="valor"></span></td></tr>
+        <td><span id="ts_bono_encuesta" class="valor"></span></td>
+      </tr>
 
-      <tr><td>Score</td>
+      <tr>
+        <td>Score</td>
         <td><span id="ts_score" class="valor"></span></td>
-        <td><span id="ts_bono_score" class="valor"></span></td></tr>
-
-      <tr><td>Ocupación RM</td>
-        <td><span id="ts_rm" class="valor"></span></td>
-        <td><span id="ts_bono_rm" class="valor"></span></td></tr>
-
-      <tr><td>Ocupación PC</td>
-        <td><span id="ts_pc" class="valor"></span></td>
-        <td><span id="ts_bono_pc" class="valor"></span></td></tr>
-
-      <tr><td>Ocupación PP</td>
-        <td><span id="ts_pp" class="valor"></span></td>
-        <td><span id="ts_bono_pp" class="valor"></span></td></tr>
-
-      <tr><td>Ocupación SA</td>
-        <td><span id="ts_sa" class="valor"></span></td>
-        <td><span id="ts_bono_sa" class="valor"></span></td></tr>
-
-      <tr><td>Ocupación CG</td>
-        <td><span id="ts_cg" class="valor"></span></td>
-        <td><span id="ts_bono_cg" class="valor"></span></td></tr>
+        <td><span id="ts_bono_score" class="valor"></span></td>
+      </tr>
     </table>
   </div>
 
-  <!-- ================= MC (Member Care) ================= -->
+  <!-- ================= MC ================= -->
   <div id="mc" style="display:none;">
     <h2>Member Care – Métricas MTD</h2>
-
     <div class="info-mensaje">
-      Las métricas de <strong>Member Care</strong> se encuentran actualmente en configuración.<br><br>
-      Para mayor información, por favor contacta con tu supervisor.
+      Las métricas de Member Care aún no están configuradas.<br>
+      No se muestran métricas de otros equipos.
     </div>
   </div>
-
 </div>
 
 <script>
 /* ================= CONFIG ================= */
-
 const URL_TS =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv";
 
 /* ================= SESIÓN ================= */
-
 const usuario = localStorage.getItem("usuario");
 const equipo  = localStorage.getItem("equipo");
 
-if (!usuario || !equipo) {
-  location.href = "index.html";
-}
+if (!usuario || !equipo) location.href = "index.html";
 
 document.getElementById("info-usuario").innerText =
-  `Usuario: ${usuario} | Equipo: ${equipo === "MC" ? "Member Care" : "Travel Specialist"}`;
+`Usuario: ${usuario} | Equipo: ${equipo === "MC" ? "Member Care" : "Travel Specialist"}`;
 
 /* ================= HELPERS ================= */
-
 const num = v => v ? Number(v.replace(/[^0-9.]/g,"")) : 0;
 
-const bonoQA    = q => q < 85 ? 0 : q <= 90 ? 30 : q <= 95 ? 50 : 80;
-const bonoScore = s => s < 4.5 ? 0 : s < 4.8 ? 50 : 80;
-const bonoEncTS = e => e < 74 ? 0 : e <= 79 ? 30 : e <= 85 ? 50 : 80;
-
-function cargarCSV(url, cb){
-  fetch(url)
-    .then(r => r.text())
-    .then(csv => {
-      const rows = csv.trim().split("\n");
-      const h = rows.shift().split(",").map(x => x.toLowerCase());
-      rows.forEach(r => {
-        const o = {}, v = r.split(",");
-        h.forEach((k,i) => o[k] = v[i]);
-        if (o.email === usuario) cb(o);
-      });
-    });
+function marcarColor(el, valor, limites){
+  el.classList.remove("rojo","verde","azul");
+  if (valor < limites.rojo) el.classList.add("rojo");
+  else if (valor < limites.azul) el.classList.add("azul");
+  else el.classList.add("verde");
 }
 
-/* ================= LÓGICA POR EQUIPO ================= */
+function cargarCSV(url, cb){
+  fetch(url).then(r=>r.text()).then(csv=>{
+    const rows = csv.trim().split("\n");
+    const h = rows.shift().split(",").map(x=>x.toLowerCase());
+    rows.forEach(r=>{
+      const o={},v=r.split(",");
+      h.forEach((k,i)=>o[k]=v[i]);
+      if (o.email === usuario) cb(o);
+    });
+  });
+}
+
+/* ================= LÓGICA ================= */
 
 if (equipo === "TS") {
-
   document.getElementById("ts").style.display = "block";
 
-  cargarCSV(URL_TS, f => {
+  cargarCSV(URL_TS, f=>{
     const noches = num(f.noches);
-    const qa     = num(f.qa);
-    const enc    = num(f.encuesta);
-    const score  = num(f.score);
+    const qa = num(f.qa);
+    const enc = num(f.encuesta);
+    const score = num(f.score);
 
-    document.getElementById("ts_noches").innerText = noches;
-    document.getElementById("ts_qa").innerText = qa;
-    document.getElementById("ts_encuesta").innerText = enc;
-    document.getElementById("ts_score").innerText = score;
+    ts_noches.innerText = noches;
+    ts_qa.innerText = qa;
+    ts_encuesta.innerText = enc;
+    ts_score.innerText = score;
 
-    document.getElementById("ts_bono_noches").innerText = Math.round(noches * 1.21);
-    document.getElementById("ts_bono_qa").innerText = bonoQA(qa);
-    document.getElementById("ts_bono_encuesta").innerText = bonoEncTS(enc);
-    document.getElementById("ts_bono_score").innerText = bonoScore(score);
-
-    ["rm","pc","pp","sa","cg"].forEach(k => {
-      document.getElementById(`ts_${k}`).innerText = num(f[k]);
-      const m = {rm:.95, pc:.75, pp:.65, sa:.55, cg:.55}[k];
-      document.getElementById(`ts_bono_${k}`).innerText =
-        Math.round(num(f[k]) * m);
-    });
+    marcarColor(ts_qa, qa, {rojo:85, azul:90});
+    marcarColor(ts_encuesta, enc, {rojo:74, azul:80});
+    marcarColor(ts_score, score, {rojo:4.5, azul:4.8});
   });
 
 } else if (equipo === "MC") {
-
   document.getElementById("mc").style.display = "block";
-
 }
 </script>
 
