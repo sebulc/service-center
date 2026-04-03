@@ -82,13 +82,13 @@
     </table>
   </div>
 
-  <!-- ================= MC ================= -->
+  <!-- ================= MC (Member Care) ================= -->
   <div id="mc" style="display:none;">
-    <h2>Member Concierge – Métricas MTD</h2>
+    <h2>Member Care – Métricas MTD</h2>
 
     <div class="info-mensaje">
-      Las métricas de Member Concierge se encuentran actualmente en configuración.<br><br>
-      Para información adicional, por favor contacta con tu supervisor.
+      Las métricas de <strong>Member Care</strong> se encuentran actualmente en configuración.<br><br>
+      Para mayor información, por favor contacta con tu supervisor.
     </div>
   </div>
 
@@ -110,7 +110,7 @@ if (!usuario || !equipo) {
 }
 
 document.getElementById("info-usuario").innerText =
-  `Usuario: ${usuario} | Equipo: ${equipo === "MC" ? "Member Concierge" : "Travel Specialist"}`;
+  `Usuario: ${usuario} | Equipo: ${equipo === "MC" ? "Member Care" : "Travel Specialist"}`;
 
 /* ================= HELPERS ================= */
 
@@ -173,5 +173,4 @@ if (equipo === "TS") {
 
 </body>
 </html>
-
 
