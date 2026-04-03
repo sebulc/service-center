@@ -149,12 +149,12 @@ if (equipo === "TS") {
         document.getElementById("bono_noches").innerText = Math.round(noches * 1.21);
 
         const qa = num(o.qa);
-        qaEl.innerText = qa;
+        qaEl.innerText = qa + "%";
         marcar(qaEl, qa < 91 ? "rojo" : qa <= 95 ? "verde" : "azul");
         document.getElementById("bono_qa").innerText = bonoQA(qa);
 
         const enc = num(o.encuesta);
-        encEl.innerText = enc;
+        encEl.innerText = enc + "%";
         marcar(encEl, enc < 80 ? "rojo" : enc <= 85 ? "verde" : "azul");
         document.getElementById("bono_encuesta").innerText = bonoEnc(enc);
 
