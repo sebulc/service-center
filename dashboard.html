@@ -59,7 +59,9 @@
 <p id="info-usuario"></p>
 <hr>
 
-<!-- ================= TS ================= -->
+<!-- ================================================= -->
+<!-- ======================= TS ====================== -->
+<!-- ================================================= -->
 <div id="ts" style="display:none;">
 <h2>Travel Specialist – Métricas MTD</h2>
 
@@ -78,7 +80,9 @@
 </table>
 </div>
 
-<!-- ================= MC ================= -->
+<!-- ================================================= -->
+<!-- ======================= MC ====================== -->
+<!-- ================================================= -->
 <div id="mc" style="display:none;">
 <h2>Member Care – Métricas MTD</h2>
 
@@ -99,7 +103,119 @@
 </div>
 
 <script>
+/* ================= GENERALES ================= */
+
 const usuario = localStorage.getItem("usuario");
 const equipo  = localStorage.getItem("equipo");
 
-document.getElement
+document.getElementById("info-usuario").innerText =
+`Usuario: ${usuario} | Equipo: ${equipo === "MC" ? "Member Care" : "Travel Specialist"}`;
+
+const num = v => v ? Number(String(v).replace(/[^0-9.]/g,"")) : 0;
+
+function marcar(el, color){
+  el.classList.remove("rojo","verde","azul");
+  if(color) el.classList.add(color);
+}
+
+/* ================================================= */
+/* ========================= TS ===================== */
+/* ================================================= */
+
+if (equipo === "TS") {
+  document.getElementById("ts").style.display = "block";
+
+  const nochesEl = document.getElementById("noches");
+  const qaEl = document.getElementById("qa");
+  const encEl = document.getElementById("encuesta");
+  const scoreEl = document.getElementById("score");
+
+  const bonoQA = q => q < 91 ? 0 : q <= 95 ? 50 : 80;
+  const bonoEnc = e => e < 80 ? 0 : e <= 85 ? 50 : 80;
+  const bonoScore = s => s < 4.5 ? 0 : s < 4.8 ? 50 : 80;
+
+  fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv")
+    .then(r => r.text())
+    .then(csv => {
+      const rows = csv.trim().split("\n");
+      const h = rows.shift().split(",").map(x => x.toLowerCase());
+      rows.forEach(r => {
+        const o = {}, v = r.split(",");
+        h.forEach((k,i)=>o[k]=v[i]);
+        if(o.email !== usuario) return;
+
+        const noches = num(o.noches);
+        nochesEl.innerText = noches;
+        document.getElementById("bono_noches").innerText = Math.round(noches * 1.21);
+
+        const qa = num(o.qa);
+        qaEl.innerText = qa;
+        marcar(qaEl, qa < 91 ? "rojo" : qa <= 95 ? "verde" : "azul");
+        document.getElementById("bono_qa").innerText = bonoQA(qa);
+
+        const enc = num(o.encuesta);
+        encEl.innerText = enc;
+        marcar(encEl, enc < 80 ? "rojo" : enc <= 85 ? "verde" : "azul");
+        document.getElementById("bono_encuesta").innerText = bonoEnc(enc);
+
+        const score = num(o.score);
+        scoreEl.innerText = score;
+        marcar(scoreEl, score < 4.5 ? "rojo" : score < 4.8 ? "verde" : "azul");
+        document.getElementById("bono_score").innerText = bonoScore(score);
+
+        ["rm","pc","pp","sa","cg"].forEach(k=>{
+          const val=num(o[k]);
+          document.getElementById(k).innerText = val;
+          document.getElementById("bono_"+k).innerText =
+            Math.round(val*{rm:.95,pc:.75,pp:.65,sa:.55,cg:.55}[k]);
+        });
+      });
+    });
+}
+
+/* ================================================= */
+/* ========================= MC ===================== */
+/* ================================================= */
+
+if (equipo === "MC") {
+  document.getElementById("mc").style.display = "block";
+
+  fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=0&single=true&output=csv")
+    .then(r=>r.text())
+    .then(csv=>{
+      const rows = csv.trim().split("\n");
+      const h = rows.shift().split(",").map(x => x.toLowerCase());
+      rows.forEach(r=>{
+        const o={},v=r.split(",");
+        h.forEach((k,i)=>o[k]=v[i]);
+        if(o.email!==usuario) return;
+
+        const same=num(o.same);
+        mc_same.innerText=same; marcar(mc_same,same<12?"rojo":same<=14?"verde":"azul");
+
+        mc_dng.innerText=num(o.dng);
+
+        const ps=num(o.psame);
+        mc_psame.innerText=ps+"%"; marcar(mc_psame,ps<70?"rojo":"verde");
+
+        const monto=num(o.monto);
+        mc_monto.innerText=monto; marcar(mc_monto,monto<8000?"rojo":monto<=15000?"verde":"azul");
+
+        const wc=num(o.wc);
+        mc_wc.innerText=wc+"%"; marcar(mc_wc,wc<96?"rojo":"verde");
+
+        const enc=num(o.encuesta);
+        mc_encuesta.innerText=enc+"%"; marcar(mc_encuesta,enc<73?"rojo":enc<=79?"verde":"azul");
+
+        const qa=num(o.qa);
+        mc_qa.innerText=qa+"%"; marcar(mc_qa,qa<91?"rojo":qa<=95?"verde":"azul");
+
+        const score=num(o.score);
+        mc_score.innerText=score; marcar(mc_score,score<4.5?"rojo":score<4.8?"verde":"azul");
+      });
+    });
+}
+</script>
+
+</body>
+</html>
