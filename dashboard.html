@@ -147,3 +147,26 @@ if(equipo==="MC"){
 document.getElementById("mc").style.display="block";
 let totalMC=0;
 
+fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=0&single=true&output=csv")
+.then(r=>r.text()).then(csv=>{
+const rows=csv.trim().split("\n");
+const h=rows.shift().split(",").map(x=>x.toLowerCase().trim());
+
+rows.forEach(r=>{
+const o={},v=r.split(",");
+h.forEach((k,i)=>o[k]=v[i]);
+if(o.email!==usuario)return;
+
+let sc=num(o.score);
+mc_score.innerText=sc;
+marcar(mc_score,sc<4.5?"rojo":sc<4.8?"verde":"azul");
+let bsc=sc<4.5?0:sc<4.8?50:80;
+mc_bono_score.innerText=bsc; totalMC+=bsc;
+
+total_bono_mc.innerText=totalMC;
+});
+});
+}
+</script>
+</body>
+</html>
