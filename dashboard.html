@@ -21,7 +21,6 @@
     .verde{background:#d4edda;color:#155724}
     .azul{background:#d1ecf1;color:#0c5460}
     .total-row td { border-top:2px solid #000; font-weight:bold; }
-    .leyenda { margin-top:15px; font-size:12px; color:#555; }
   </style>
 </head>
 
@@ -30,25 +29,6 @@
 <h1>Resultados Service Center</h1>
 <p id="info-usuario"></p>
 <hr>
-
-<!-- ================= TS ================= -->
-<div id="ts" style="display:none">
-<h2>Travel Specialist – Métricas MTD</h2>
-
-<table>
-<tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
-
-<tr><td>Noches Vendidas</td><td><span id="noches" class="valor"></span></td><td><span id="bono_noches" class="valor"></span></td></tr>
-<tr><td>QA</td><td><span id="qa" class="valor"></span></td><td><span id="bono_qa" class="valor"></span></td></tr>
-<tr><td>% Encuesta</td><td><span id="encuesta" class="valor"></span></td><td><span id="bono_encuesta" class="valor"></span></td></tr>
-<tr><td>Score</td><td><span id="score" class="valor"></span></td><td><span id="bono_score" class="valor"></span></td></tr>
-
-<tr class="total-row">
-  <td colspan="2">TOTAL BONO</td>
-  <td><span id="total_bono_ts" class="valor"></span></td>
-</tr>
-</table>
-</div>
 
 <!-- ================= MC ================= -->
 <div id="mc" style="display:none">
@@ -72,7 +52,6 @@
 </tr>
 </table>
 </div>
-
 </div>
 
 <script>
@@ -96,54 +75,59 @@ if(equipo==="MC"){
   fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=0&single=true&output=csv")
   .then(r=>r.text()).then(csv=>{
     const rows = csv.trim().split("\n");
-    const h = rows.shift().split(",").map(x => x.toLowerCase().trim());
+    const h = rows.shift().split(",").map(x=>x.toLowerCase().trim());
 
     rows.forEach(r=>{
       const o={}, v=r.split(",");
       h.forEach((k,i)=>o[k]=v[i]);
-      if(o.email !== usuario) return;
+      if(o.email!==usuario) return;
 
-      let same = num(o.same);
-      mc_same.innerText = same;
-      let bs = same <= 14 ? same*22 : same <= 19 ? same*23 : same*25;
-      mc_bono_same.innerText = bs; totalMC+=bs;
+      let same=num(o.same);
+      mc_same.innerText=same;
+      marcar(mc_same, same<12?"rojo":same<=14?"verde":"azul");
+      let bs=same<=14?same*22:same<=19?same*23:same*25;
+      mc_bono_same.innerText=bs; totalMC+=bs;
 
-      let dng = num(o.dng);
-      mc_dng.innerText = dng;
-      let bd = (num(o.psame)>=70 || same>=17) ? dng*10 : 0;
-      mc_bono_dng.innerText = bd; totalMC+=bd;
+      let dng=num(o.dng);
+      mc_dng.innerText=dng;
+      let bd=(num(o.psame)>=70||same>=17)?dng*10:0;
+      mc_bono_dng.innerText=bd; totalMC+=bd;
 
-      mc_psame.innerText = num(o.psame)+"%";
+      let ps=num(o.psame);
+      mc_psame.innerText=ps+"%";
+      marcar(mc_psame, ps<70?"rojo":"verde");
 
-      let mon = num(o.monto);
-      mc_monto.innerText = mon;
-      let bm = Math.round(mon*0.01);
-      mc_bono_monto.innerText = bm; totalMC+=bm;
+      let mon=num(o.monto);
+      mc_monto.innerText=mon;
+      marcar(mc_monto, mon<8000?"rojo":mon<=15000?"verde":"azul");
+      let bm=Math.round(mon*0.01);
+      mc_bono_monto.innerText=bm; totalMC+=bm;
 
-      let wc = num(o.wc);
-      mc_wc.innerText = wc+"%";
-      let bw = wc>=96?120:0;
-      mc_bono_wc.innerText = bw; totalMC+=bw;
+      let wc=num(o.wc);
+      mc_wc.innerText=wc+"%";
+      marcar(mc_wc, wc<96?"rojo":"verde");
+      let bw=wc>=96?120:0;
+      mc_bono_wc.innerText=bw; totalMC+=bw;
 
-      let enc = num(o.encuesta);
-      mc_encuesta.innerText = enc+"%";
-      let be = enc<=72?30:enc<=79?50:80;
-      mc_bono_encuesta.innerText = be; totalMC+=be;
+      let enc=num(o.encuesta);
+      mc_encuesta.innerText=enc+"%";
+      marcar(mc_encuesta, enc<73?"rojo":enc<=79?"verde":"azul");
+      let be=enc<=72?30:enc<=79?50:80;
+      mc_bono_encuesta.innerText=be; totalMC+=be;
 
-      let qa = num(o.qa);
-      mc_qa.innerText = qa+"%";
-      let bqa = qa<=90?30:qa<=95?50:80;
-      mc_bono_qa.innerText = bqa; totalMC+=bqa;
+      let qa=num(o.qa);
+      mc_qa.innerText=qa+"%";
+      marcar(mc_qa, qa<85?"rojo":qa<=90?"verde":"azul");
+      let bqa=qa<=90?30:qa<=95?50:80;
+      mc_bono_qa.innerText=bqa; totalMC+=bqa;
 
-      /* ===== SCORE MC (IGUAL QUE TS) ===== */
-      let sc = num(o.score);
-      mc_score.innerText = sc;
-      marcar(mc_score, sc < 4.5 ? "rojo" : sc < 4.8 ? "verde" : "azul");
-      let bsc = sc < 4.5 ? 0 : sc < 4.8 ? 50 : 80;
-      mc_bono_score.innerText = bsc;
-      totalMC += bsc;
+      let sc=num(o.score);
+      mc_score.innerText=sc;
+      marcar(mc_score, sc<4.5?"rojo":sc<4.8?"verde":"azul");
+      let bsc=sc<4.5?0:sc<4.8?50:80;
+      mc_bono_score.innerText=bsc; totalMC+=bsc;
 
-      total_bono_mc.innerText = totalMC;
+      total_bono_mc.innerText=totalMC;
     });
   });
 }
