@@ -74,7 +74,7 @@ El bono mostrado es solo informativo, este puede variar en el cálculo interno f
 <tr><td>% WC</td><td><span id="mc_wc" class="valor"></span></td><td><span id="mc_bono_wc" class="valor"></span></td></tr>
 <tr><td>% Encuesta</td><td><span id="mc_encuesta" class="valor"></span></td><td><span id="mc_bono_encuesta" class="valor"></span></td></tr>
 <tr><td>QA</td><td><span id="mc_qa" class="valor"></span></td><td><span id="mc_bono_qa" class="valor"></span></td></tr>
-<tr><td>Score</td><td><span id="mc_score" class="valor"></span></td><td><span id="mc_bono_score" class="valor"></span></td></tr>
+<tr><td>Score</td><td><span id="score" class="valor"></span></td><td><span id="bono_score" class="valor"></span></td></tr>
 
 <tr class="total-row">
   <td colspan="2">TOTAL BONO</td>
@@ -208,11 +208,11 @@ marcar(mc_qa, qa<85?"rojo":qa<=90?"verde":qa<=95?"azul":"azul");
 let bqa=qa<85?0:qa<=90?30:qa<=95?50:80;
 mc_bono_qa.innerText=bqa; totalMC+=bqa;
 
-let sc=num(o.score);
-mc_score.innerText=sc;
-marcar(mc_score, sc<4.5?"rojo":sc<4.8?"verde":"azul");
-let bsc=sc<4.5?0:sc<4.8?50:80;
-mc_bono_score.innerText=bsc; totalMC+=bsc;
+let vsc=num(o.score);
+score.innerText=vsc;
+marcar(score, vsc<4.5?"rojo":vsc<4.8?"verde":"azul");
+let bsc=vsc<4.5?0:vsc<4.8?50:80;
+bono_score.innerText=bsc; totalTS+=bsc;
 
 total_bono_mc.innerText=totalMC;
 });
