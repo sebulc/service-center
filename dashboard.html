@@ -43,21 +43,11 @@
 <tr><td>% Encuesta</td><td><span id="encuesta" class="valor"></span></td><td><span id="bono_encuesta" class="valor"></span></td></tr>
 <tr><td>Score</td><td><span id="score" class="valor"></span></td><td><span id="bono_score" class="valor"></span></td></tr>
 
-<tr><td>Ocupación RM</td><td><span id="rm" class="valor"></span></td><td><span id="bono_rm" class="valor"></span></td></tr>
-<tr><td>Ocupación PC</td><td><span id="pc" class="valor"></span></td><td><span id="bono_pc" class="valor"></span></td></tr>
-<tr><td>Ocupación PP</td><td><span id="pp" class="valor"></span></td><td><span id="bono_pp" class="valor"></span></td></tr>
-<tr><td>Ocupación SA</td><td><span id="sa" class="valor"></span></td><td><span id="bono_sa" class="valor"></span></td></tr>
-<tr><td>Ocupación CG</td><td><span id="cg" class="valor"></span></td><td><span id="bono_cg" class="valor"></span></td></tr>
-
 <tr class="total-row">
   <td colspan="2">TOTAL BONO</td>
   <td><span id="total_bono_ts" class="valor"></span></td>
 </tr>
 </table>
-
-<div class="leyenda">
-El bono mostrado es solo informativo, este puede variar en el cálculo interno final.
-</div>
 </div>
 
 <!-- ================= MC ================= -->
@@ -81,10 +71,6 @@ El bono mostrado es solo informativo, este puede variar en el cálculo interno f
   <td><span id="total_bono_mc" class="valor"></span></td>
 </tr>
 </table>
-
-<div class="leyenda">
-El bono mostrado es solo informativo, este puede variar en el cálculo interno final.
-</div>
 </div>
 
 </div>
@@ -104,60 +90,62 @@ const marcar = (el, c) => {
 
 /* ================= MC ================= */
 if(equipo==="MC"){
-document.getElementById("mc").style.display="block";
-let totalMC=0;
+  document.getElementById("mc").style.display="block";
+  let totalMC = 0;
 
-fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=0&single=true&output=csv")
-.then(r=>r.text()).then(csv=>{
-const rows=csv.trim().split("\n");
-const h=rows.shift().split(",").map(x=>x.toLowerCase());
+  fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=0&single=true&output=csv")
+  .then(r=>r.text()).then(csv=>{
+    const rows = csv.trim().split("\n");
+    const h = rows.shift().split(",").map(x => x.toLowerCase().trim());
 
-rows.forEach(r=>{
-const o={},v=r.split(",");
-h.forEach((k,i)=>o[k]=v[i]);
-if(o.email!==usuario) return;
+    rows.forEach(r=>{
+      const o={}, v=r.split(",");
+      h.forEach((k,i)=>o[k]=v[i]);
+      if(o.email !== usuario) return;
 
-let same=num(o.same);
-mc_same.innerText=same;
-let bs=same<=14?same*22:same<=19?same*23:same*25;
-mc_bono_same.innerText=bs; totalMC+=bs;
+      let same = num(o.same);
+      mc_same.innerText = same;
+      let bs = same <= 14 ? same*22 : same <= 19 ? same*23 : same*25;
+      mc_bono_same.innerText = bs; totalMC+=bs;
 
-let dng=num(o.dng);
-mc_dng.innerText=dng;
-let bd=(num(o.psame)>=70||same>=17)?dng*10:0;
-mc_bono_dng.innerText=bd; totalMC+=bd;
+      let dng = num(o.dng);
+      mc_dng.innerText = dng;
+      let bd = (num(o.psame)>=70 || same>=17) ? dng*10 : 0;
+      mc_bono_dng.innerText = bd; totalMC+=bd;
 
-mc_psame.innerText=num(o.psame)+"%";
+      mc_psame.innerText = num(o.psame)+"%";
 
-let mon=num(o.monto)
-mc_monto.innerText=mon;
-let bm=Math.round(mon*0.01);
-mc_bono_monto.innerText=bm; totalMC+=bm;
+      let mon = num(o.monto);
+      mc_monto.innerText = mon;
+      let bm = Math.round(mon*0.01);
+      mc_bono_monto.innerText = bm; totalMC+=bm;
 
-let wc=num(o.wc);
-mc_wc.innerText=wc+"%";
-let bw=wc>=96?120:0;
-mc_bono_wc.innerText=bw; totalMC+=bw;
+      let wc = num(o.wc);
+      mc_wc.innerText = wc+"%";
+      let bw = wc>=96?120:0;
+      mc_bono_wc.innerText = bw; totalMC+=bw;
 
-let enc=num(o.encuesta);
-mc_encuesta.innerText=enc+"%";
-let be=enc<=72?30:enc<=79?50:80;
-mc_bono_encuesta.innerText=be; totalMC+=be;
+      let enc = num(o.encuesta);
+      mc_encuesta.innerText = enc+"%";
+      let be = enc<=72?30:enc<=79?50:80;
+      mc_bono_encuesta.innerText = be; totalMC+=be;
 
-let qa=num(o.qa);
-mc_qa.innerText=qa+"%";
-let bqa=qa<=90?30:qa<=95?50:80;
-mc_bono_qa.innerText=bqa; totalMC+=bqa;
+      let qa = num(o.qa);
+      mc_qa.innerText = qa+"%";
+      let bqa = qa<=90?30:qa<=95?50:80;
+      mc_bono_qa.innerText = bqa; totalMC+=bqa;
 
-/* === FIX SCORE MC === */
-let sc = num(o.score ?? o["score-mc"]);
-mc_score.innerText=sc;
-let bsc=sc<4.5?0:sc<4.8?50:80;
-mc_bono_score.innerText=bsc; totalMC+=bsc;
+      /* ===== SCORE MC (IGUAL QUE TS) ===== */
+      let sc = num(o.score);
+      mc_score.innerText = sc;
+      marcar(mc_score, sc < 4.5 ? "rojo" : sc < 4.8 ? "verde" : "azul");
+      let bsc = sc < 4.5 ? 0 : sc < 4.8 ? 50 : 80;
+      mc_bono_score.innerText = bsc;
+      totalMC += bsc;
 
-total_bono_mc.innerText=totalMC;
-});
-});
+      total_bono_mc.innerText = totalMC;
+    });
+  });
 }
 </script>
 </body>
