@@ -79,7 +79,6 @@ th { border-bottom:1px solid #ccc; }
 </table>
 </div>
 
-<!-- ✅ LEYENDA RESTAURADA -->
 <div class="leyenda">
 Los datos presentados son solo informativos, el cálculo final puede variar.
 </div>
@@ -113,26 +112,26 @@ if(o.email!==usuario)return;
 
 let vno=num(o.noches);
 noches.innerText=vno;
-marcar(noches, vno<500?"rojo":vno<=599?"verde":"azul");
+marcar(noches, vno<=499?"rojo":vno<=599?"verde":"azul");
 let bno=Math.round(vno*1.21);
 bono_noches.innerText=bno; totalTS+=bno;
 
 let vqa=num(o.qa);
 qa.innerText=vqa+"%";
-marcar(qa, vqa<91?"rojo":vqa<=95?"verde":"azul");
-let bqa=vqa<91?0:vqa<=95?50:80;
+marcar(qa, vqa<=90?"rojo":vqa<=95?"verde":"azul");
+let bqa=vqa<=90?0:vqa<=95?50:80;
 bono_qa.innerText=bqa; totalTS+=bqa;
 
 let venc=num(o.encuesta);
 encuesta.innerText=venc+"%";
-marcar(encuesta, venc<80?"rojo":venc<=85?"verde":"azul");
-let benc=venc<80?0:venc<=85?50:80;
+marcar(encuesta, venc<=80?"rojo":venc<=85?"verde":"azul");
+let benc=venc<=80?0:venc<=85?50:80;
 bono_encuesta.innerText=benc; totalTS+=benc;
 
 let vsc=num(o.score);
 score.innerText=vsc;
-marcar(score, vsc<4.5?"rojo":vsc<4.8?"verde":"azul");
-let bsc=vsc<4.5?0:vsc<4.8?50:80;
+marcar(score, vsc<=4.5?"rojo":vsc<=4.8?"verde":"azul");
+let bsc=vsc<=4.5?0:vsc<=4.8?50:80;
 bono_score.innerText=bsc; totalTS+=bsc;
 
 ["rm","pc","pp","sa","cg"].forEach(k=>{
@@ -165,7 +164,7 @@ if(o.email!==usuario)return;
 
 let same=num(o.same);
 mc_same.innerText=same;
-marcar(mc_same, same<12?"rojo":same<=14?"verde":"azul");
+marcar(mc_same, same<=11?"rojo":same<=14?"verde":"azul");
 let bs=same<=14?same*22:same<=19?same*23:same*25;
 mc_bono_same.innerText=bs; totalMC+=bs;
 
@@ -176,36 +175,36 @@ mc_bono_dng.innerText=bd; totalMC+=bd;
 
 let ps=num(o.psame);
 mc_psame.innerText=ps+"%";
-marcar(mc_psame, ps<70?"rojo":"verde");
+marcar(mc_psame, ps<=69?"rojo":"verde");
 
 let mon=num(o.monto);
 mc_monto.innerText=mon;
-marcar(mc_monto, mon<8000?"rojo":mon<=15000?"verde":"azul");
+marcar(mc_monto, mon<=7999?"rojo":mon<=15000?"verde":"azul");
 let bm=Math.round(mon*0.01);
 mc_bono_monto.innerText=bm; totalMC+=bm;
 
 let wc=num(o.wc);
 mc_wc.innerText=wc+"%";
-marcar(mc_wc, wc<96?"rojo":"verde");
+marcar(mc_wc, wc<=95?"rojo":"verde");
 let bw=wc>=96?120:0;
 mc_bono_wc.innerText=bw; totalMC+=bw;
 
 let enc=num(o.encuesta);
 mc_encuesta.innerText=enc+"%";
-marcar(mc_encuesta, enc<73?"rojo":enc<=79?"verde":"azul");
-let be=enc<66?0:enc<=72?30:enc<=79?50:80;
+marcar(mc_encuesta, enc<=72?"rojo":enc<=79?"verde":"azul");
+let be=enc<=72?0:enc<=79?50:80;
 mc_bono_encuesta.innerText=be; totalMC+=be;
 
 let qa=num(o.qa);
 mc_qa.innerText=qa+"%";
-marcar(mc_qa, qa<85?"rojo":qa<=90?"verde":"azul");
-let bqa=qa<85?0:qa<=90?30:qa<=95?50:80;
+marcar(mc_qa, qa<=84?"rojo":qa<=90?"verde":"azul");
+let bqa=qa<=84?0:qa<=90?30:qa<=95?50:80;
 mc_bono_qa.innerText=bqa; totalMC+=bqa;
 
 let sc=num(o.score);
 mc_score.innerText=sc;
-marcar(mc_score, sc<4.5?"rojo":sc<4.8?"verde":"azul");
-let bsc=sc<4.5?0:sc<4.8?50:80;
+marcar(mc_score, sc<=4.5?"rojo":sc<=4.8?"verde":"azul");
+let bsc=sc<=4.5?0:sc<=4.8?50:80;
 mc_bono_score.innerText=bsc; totalMC+=bsc;
 
 total_bono_mc.innerText=totalMC;
