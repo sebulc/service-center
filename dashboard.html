@@ -34,6 +34,7 @@
 <!-- ================= TS ================= -->
 <div id="ts" style="display:none">
 <h2>Travel Specialist – Métricas MTD</h2>
+
 <table>
 <tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
 
@@ -41,12 +42,6 @@
 <tr><td>QA</td><td><span id="qa" class="valor"></span></td><td><span id="bono_qa" class="valor"></span></td></tr>
 <tr><td>% Encuesta</td><td><span id="encuesta" class="valor"></span></td><td><span id="bono_encuesta" class="valor"></span></td></tr>
 <tr><td>Score</td><td><span id="score" class="valor"></span></td><td><span id="bono_score" class="valor"></span></td></tr>
-
-<tr><td>Ocupación RM</td><td><span id="rm" class="valor"></span></td><td><span id="bono_rm" class="valor"></span></td></tr>
-<tr><td>Ocupación PC</td><td><span id="pc" class="valor"></span></td><td><span id="bono_pc" class="valor"></span></td></tr>
-<tr><td>Ocupación PP</td><td><span id="pp" class="valor"></span></td><td><span id="bono_pp" class="valor"></span></td></tr>
-<tr><td>Ocupación SA</td><td><span id="sa" class="valor"></span></td><td><span id="bono_sa" class="valor"></span></td></tr>
-<tr><td>Ocupación CG</td><td><span id="cg" class="valor"></span></td><td><span id="bono_cg" class="valor"></span></td></tr>
 
 <tr class="total-row">
 <td colspan="2">TOTAL BONO</td>
@@ -58,6 +53,7 @@
 <!-- ================= MC ================= -->
 <div id="mc" style="display:none">
 <h2>Member Care – Métricas MTD</h2>
+
 <table>
 <tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
 
@@ -86,64 +82,11 @@ document.getElementById("info-usuario").innerText =
   `Usuario: ${usuario} | Equipo: ${equipo==="MC"?"Member Care":"Travel Specialist"}`;
 
 const num = v => v ? Number(String(v).replace(/[^0-9.]/g,"")) : 0;
-const marcar = (el, c) => {
-  el.classList.remove("rojo","verde","azul");
-  if(c) el.classList.add(c);
-};
-
-/* ================= TS ================= */
-if(equipo==="TS"){
-document.getElementById("ts").style.display="block";
-let totalTS=0;
-
-fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv")
-.then(r=>r.text()).then(csv=>{
-const rows=csv.trim().split("\n");
-const h=rows.shift().split(",").map(x=>x.toLowerCase().trim());
-
-rows.forEach(r=>{
-const o={},v=r.split(",");
-h.forEach((k,i)=>o[k]=v[i]);
-if(o.email!==usuario)return;
-
-let vsc=num(o.score);
-score.innerText=vsc;
-marcar(score,vsc<4.5?"rojo":vsc<4.8?"verde":"azul");
-let bsc=vsc<4.5?0:vsc<4.8?50:80;
-bono_score.innerText=bsc;
-totalTS+=bsc;
-
-total_bono_ts.innerText=totalTS;
-});
-});
-}
+const marcar = (el,c)=>{el.classList.remove("rojo","verde","azul"); if(c)el.classList.add(c);};
 
 /* ================= MC ================= */
 if(equipo==="MC"){
 document.getElementById("mc").style.display="block";
 let totalMC=0;
 
-fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=0&single=true&output=csv")
-.then(r=>r.text()).then(csv=>{
-const rows=csv.trim().split("\n");
-const h=rows.shift().split(",").map(x=>x.toLowerCase().trim());
-
-rows.forEach(r=>{
-const o={},v=r.split(",");
-h.forEach((k,i)=>o[k]=v[i]);
-if(o.email!==usuario)return;
-
-let sc=num(o.score);
-mc_score.innerText=sc;
-marcar(mc_score,sc<4.5?"rojo":sc<4.8?"verde":"azul");
-let bsc=sc<4.5?0:sc<4.8?50:80;
-mc_bono_score.innerText=bsc;
-totalMC+=bsc;
-
-total_bono_mc.innerText=totalMC;
-});
-});
-}
-</script>
-</body>
-</html>
+fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDF
