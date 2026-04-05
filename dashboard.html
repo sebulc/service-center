@@ -34,7 +34,6 @@
 <!-- ================= TS ================= -->
 <div id="ts" style="display:none">
 <h2>Travel Specialist – Métricas MTD</h2>
-
 <table>
 <tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
 
@@ -50,20 +49,15 @@
 <tr><td>Ocupación CG</td><td><span id="cg" class="valor"></span></td><td><span id="bono_cg" class="valor"></span></td></tr>
 
 <tr class="total-row">
-  <td colspan="2">TOTAL BONO</td>
-  <td><span id="total_bono_ts" class="valor"></span></td>
+<td colspan="2">TOTAL BONO</td>
+<td><span id="total_bono_ts" class="valor"></span></td>
 </tr>
 </table>
-
-<div class="leyenda">
-El bono mostrado es solo informativo, este puede variar en el cálculo interno final.
-</div>
 </div>
 
 <!-- ================= MC ================= -->
 <div id="mc" style="display:none">
 <h2>Member Care – Métricas MTD</h2>
-
 <table>
 <tr><th>Métrica</th><th>Resultado</th><th>Bono</th></tr>
 
@@ -77,16 +71,11 @@ El bono mostrado es solo informativo, este puede variar en el cálculo interno f
 <tr><td>Score</td><td><span id="mc_score" class="valor"></span></td><td><span id="mc_bono_score" class="valor"></span></td></tr>
 
 <tr class="total-row">
-  <td colspan="2">TOTAL BONO</td>
-  <td><span id="total_bono_mc" class="valor"></span></td>
+<td colspan="2">TOTAL BONO</td>
+<td><span id="total_bono_mc" class="valor"></span></td>
 </tr>
 </table>
-
-<div class="leyenda">
-El bono mostrado es solo informativo, este puede variar en el cálculo interno final.
 </div>
-</div>
-
 </div>
 
 <script>
@@ -105,49 +94,24 @@ const marcar = (el, c) => {
 /* ================= TS ================= */
 if(equipo==="TS"){
 document.getElementById("ts").style.display="block";
-let totalTS = 0;
+let totalTS=0;
 
 fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=916846529&single=true&output=csv")
 .then(r=>r.text()).then(csv=>{
 const rows=csv.trim().split("\n");
-const h=rows.shift().split(",").map(x=>x.toLowerCase());
+const h=rows.shift().split(",").map(x=>x.toLowerCase().trim());
 
 rows.forEach(r=>{
 const o={},v=r.split(",");
 h.forEach((k,i)=>o[k]=v[i]);
-if(o.email!==usuario) return;
-
-let vno = num(o.noches);
-noches.innerText=vno;
-marcar(noches, vno<500?"rojo":vno<=599?"verde":"azul");
-let bno=Math.round(vno*1.21);
-bono_noches.innerText=bno; totalTS+=bno;
-
-let vqa=num(o.qa);
-qa.innerText=vqa+"%";
-marcar(qa, vqa<91?"rojo":vqa<=95?"verde":"azul");
-let bqa=vqa<91?0:vqa<=95?50:80;
-bono_qa.innerText=bqa; totalTS+=bqa;
-
-let venc=num(o.encuesta);
-encuesta.innerText=venc+"%";
-marcar(encuesta, venc<80?"rojo":venc<=85?"verde":"azul");
-let benc=venc<80?0:venc<=85?50:80;
-bono_encuesta.innerText=benc; totalTS+=benc;
+if(o.email!==usuario)return;
 
 let vsc=num(o.score);
 score.innerText=vsc;
-marcar(score, vsc<4.5?"rojo":vsc<4.8?"verde":"azul");
+marcar(score,vsc<4.5?"rojo":vsc<4.8?"verde":"azul");
 let bsc=vsc<4.5?0:vsc<4.8?50:80;
-bono_score.innerText=bsc; totalTS+=bsc;
-
-["rm","pc","pp","sa","cg"].forEach(k=>{
-let vv=num(o[k]);
-document.getElementById(k).innerText=vv;
-let bb=Math.round(vv*{rm:.95,pc:.75,pp:.65,sa:.55,cg:.55}[k]);
-document.getElementById("bono_"+k).innerText=bb;
-totalTS+=bb;
-});
+bono_score.innerText=bsc;
+totalTS+=bsc;
 
 total_bono_ts.innerText=totalTS;
 });
@@ -162,59 +126,19 @@ let totalMC=0;
 fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vTdv7cDmQ5U56rYvgTDFAsO_HQ3LPDj_PoAmMhodXdkvkaMaCTMRSejOI4w1cik3lQ6f4QhSYjpY-Pi/pub?gid=0&single=true&output=csv")
 .then(r=>r.text()).then(csv=>{
 const rows=csv.trim().split("\n");
-const h=rows.shift().split(",").map(x=>x.toLowerCase());
+const h=rows.shift().split(",").map(x=>x.toLowerCase().trim());
 
 rows.forEach(r=>{
 const o={},v=r.split(",");
 h.forEach((k,i)=>o[k]=v[i]);
-if(o.email!==usuario) return;
-  const h = rows.shift().split(",").map(x => x.toLowerCase());
+if(o.email!==usuario)return;
 
-let same=num(o.same);
-mc_same.innerText=same;
-marcar(mc_same, same<12?"rojo":same<=14?"verde":"azul");
-let bs=same<=14?same*22:same<=19?same*23:same*25;
-mc_bono_same.innerText=bs; totalMC+=bs;
-
-let dng=num(o.dng);
-mc_dng.innerText=dng;
-let bd=(num(o.psame)>=70||same>=17)?dng*10:0;
-mc_bono_dng.innerText=bd; totalMC+=bd;
-
-let ps=num(o.psame);
-mc_psame.innerText=ps+"%";
-marcar(mc_psame, ps<70?"rojo":"verde");
-
-let mon=num(o.monto)
-mc_monto.innerText=mon;
-marcar(mc_monto, mon<8000?"rojo":mon<=15000?"verde":"azul");
-let bm=Math.round(mon*0.01);
-mc_bono_monto.innerText=bm; totalMC+=bm;
-
-let wc=num(o.wc);
-mc_wc.innerText=wc+"%";
-marcar(mc_wc, wc<96?"rojo":"verde");
-let bw=wc>=96?120:0;
-mc_bono_wc.innerText=bw; totalMC+=bw;
-
-let enc=num(o.encuesta);
-mc_encuesta.innerText=enc+"%";
-marcar(mc_encuesta, enc<73?"rojo":enc<=79?"verde":"azul");
-let be=enc<66?0:enc<=72?30:enc<=79?50:80;
-mc_bono_encuesta.innerText=be; totalMC+=be;
-
-let qa=num(o.qa);
-mc_qa.innerText=qa+"%";
-marcar(mc_qa, qa<85?"rojo":qa<=90?"verde":qa<=95?"azul":"azul");
-let bqa=qa<85?0:qa<=90?30:qa<=95?50:80;
-mc_bono_qa.innerText=bqa; totalMC+=bqa;
-
-let sc = scoreIndex !== -1 ? num(v[scoreIndex]) : 0;
-mc_score.innerText = sc;
-marcar(mc_score, sc<4.5?"rojo":sc<4.8?"verde":"azul");
-let bsc = sc<4.5 ? 0 : sc<4.8 ? 50 : 80;
-mc_bono_score.innerText = bsc;
-totalMC += bsc;
+let sc=num(o.score);
+mc_score.innerText=sc;
+marcar(mc_score,sc<4.5?"rojo":sc<4.8?"verde":"azul");
+let bsc=sc<4.5?0:sc<4.8?50:80;
+mc_bono_score.innerText=bsc;
+totalMC+=bsc;
 
 total_bono_mc.innerText=totalMC;
 });
@@ -223,4 +147,3 @@ total_bono_mc.innerText=totalMC;
 </script>
 </body>
 </html>
-``
