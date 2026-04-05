@@ -168,6 +168,7 @@ rows.forEach(r=>{
 const o={},v=r.split(",");
 h.forEach((k,i)=>o[k]=v[i]);
 if(o.email!==usuario) return;
+  const h = rows.shift().split(",").map(x => x.toLowerCase());
 
 let same=num(o.same);
 mc_same.innerText=same;
@@ -208,11 +209,12 @@ marcar(mc_qa, qa<85?"rojo":qa<=90?"verde":qa<=95?"azul":"azul");
 let bqa=qa<85?0:qa<=90?30:qa<=95?50:80;
 mc_bono_qa.innerText=bqa; totalMC+=bqa;
 
-let sc=num(o.score);
-mc_score.innerText=sc;
+let sc = scoreIndex !== -1 ? num(v[scoreIndex]) : 0;
+mc_score.innerText = sc;
 marcar(mc_score, sc<4.5?"rojo":sc<4.8?"verde":"azul");
-let bsc=sc<4.5?0:sc<4.8?50:80;
-mc_bono_score.innerText=bsc; totalMC+=bsc;
+let bsc = sc<4.5 ? 0 : sc<4.8 ? 50 : 80;
+mc_bono_score.innerText = bsc;
+totalMC += bsc;
 
 total_bono_mc.innerText=totalMC;
 });
