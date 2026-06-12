@@ -15,6 +15,7 @@ const usuarios = {
   "gianni.fenoglio@ultimateleisureclub.com": { equipo: "TS", password: "Trama267" },
   "isidro.velasquez@ultimateleisureclub.com": { equipo: "TS", password: "Nexo431" },
   "julio.olivo@ultimateleisureclub.com": { equipo: "TS", password: "Pulso804" },
+  "michael.piggott@ultimateleisureclub.com": { equipo: "TS", password: "Rayo245" },
   "neel.patel@ultimateleisureclub.com": { equipo: "TS", password: "Orion593" },
   "rosio.ubarte@ultimateleisureclub.com": { equipo: "TS", password: "Delta126" }
 };
